@@ -20,6 +20,6 @@ public class SGameSDK implements ISGameSDK {
 
     @Override
     public void logout(Context context) {
-        
+
     }
 }
