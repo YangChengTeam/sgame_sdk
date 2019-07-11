@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.yc.sgame.uc.SUcGameSDk;
 
-
 public class SGameSDK implements ISGameSDK {
 
     private static SGameSDK sGameSDK;
@@ -22,8 +21,10 @@ public class SGameSDK implements ISGameSDK {
         return sGameSDK;
     }
 
+
+
     @Override
-    public void init(Context context, Config config) {
+    public void init(Context context, Config config, InitCallback callback) {
         SUcGameSDk.getImpl().init((Activity) context, config);
     }
 
@@ -36,7 +37,6 @@ public class SGameSDK implements ISGameSDK {
     public void showAd(Context context, AdType type, AdCallback callback) {
         SUcGameSDk.getImpl().showSplashAd((Activity) context, null);
     }
-
     public void showSplashAd(Activity activity, ViewGroup viewGroup) {
         SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
     }
@@ -55,7 +55,9 @@ public class SGameSDK implements ISGameSDK {
 
 
     @Override
-    public void logout(Context context) {
+    public void logout(Context context, LoginCallback callback) {
         SUcGameSDk.getImpl().logout((Activity) context);
     }
+
+
 }
