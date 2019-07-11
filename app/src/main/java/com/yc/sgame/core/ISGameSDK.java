@@ -8,4 +8,6 @@ public interface ISGameSDK {
     void login(Context context, LoginCallback callback);
 
     void showAd(Context context, AdType type, AdCallback callback);
+
+    void logout(Context context);
 }
