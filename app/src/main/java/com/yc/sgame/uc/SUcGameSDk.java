@@ -13,12 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.yc.sgame.core.AdCallback;
-import com.yc.sgame.core.AdError;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Config;
+import com.yc.sgame.core.Error;
 import com.yc.sgame.core.ISGameSDK;
+import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.LoginCallback;
-import com.yc.sgame.core.LoginError;
 import com.yc.sgame.uc.config.AdConfig;
 import com.yc.sgame.uc.config.UCSdkConfig;
 import com.yc.sgame.uc.utils.ToastUtil;
@@ -67,6 +67,8 @@ public class SUcGameSDk implements ISGameSDK {
 
 
     private static SUcGameSDk sUcGameSDk;
+    private InitCallback mSGameInitCallback;
+    private LoginCallback mLogoutCallback;
 
     public static SUcGameSDk getImpl() {
         if (sUcGameSDk == null) {
@@ -80,8 +82,9 @@ public class SUcGameSDk implements ISGameSDK {
     }
 
     @Override
-    public void init(Context context, Config config) {
+    public void init(Context context, Config config, InitCallback callback) {
         this.mConfig = config;
+        this.mSGameInitCallback=callback;
         this.mActivity = (Activity) context;
         this.mHandler = new Handler(Looper.getMainLooper());
 
@@ -197,7 +200,8 @@ public class SUcGameSDk implements ISGameSDK {
 
 
     @Override
-    public void logout(Context context) {
+    public void logout(Context context, LoginCallback callback) {
+        this.mLogoutCallback=callback;
         try {
             UCGameSdk.defaultSdk().logout(mActivity, null);
         } catch (AliLackActivityException e) {
@@ -266,7 +270,7 @@ public class SUcGameSDk implements ISGameSDK {
         public void onErrorAd(final int code, final String message) {
             ToastUtil.show(TAG, "onErrorAd " + " code " + code + "  message " + message);
             if (mAdCallback != null) {
-                AdError adError = new AdError();
+                Error adError = new Error();
                 adError.setCode(String.valueOf(code));
                 adError.setMessage(message);
                 mAdCallback.onNoAd(adError);
@@ -305,7 +309,7 @@ public class SUcGameSDk implements ISGameSDK {
         @Override
         public void onErrorAd(int code, String message) {
             if (mAdCallback != null) {
-                AdError adError = new AdError();
+                Error adError = new Error();
                 adError.setCode(String.valueOf(code));
                 adError.setMessage(message);
                 mAdCallback.onNoAd(adError);
@@ -426,7 +430,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Subscribe(event = SDKEventKey.ON_LOGIN_FAILED)
         private void onLoginFailed(String desc) {  //登录失败
-            LoginError loginError = new LoginError();
+            Error loginError = new Error();
             loginError.setMessage(desc);
             mLoginCallback.onFailure(loginError);
         }

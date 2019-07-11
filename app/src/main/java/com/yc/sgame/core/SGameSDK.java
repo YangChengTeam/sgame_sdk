@@ -2,6 +2,7 @@ package com.yc.sgame.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.yc.sgame.uc.SUcGameSDk;
@@ -25,7 +26,7 @@ public class SGameSDK implements ISGameSDK {
 
     @Override
     public void init(Context context, Config config, InitCallback callback) {
-        SUcGameSDk.getImpl().init((Activity) context, config);
+        SUcGameSDk.getImpl().init((Activity) context, config,callback);
     }
 
     @Override
@@ -35,9 +36,21 @@ public class SGameSDK implements ISGameSDK {
 
     @Override
     public void showAd(Context context, AdType type, AdCallback callback) {
-        SUcGameSDk.getImpl().showSplashAd((Activity) context, null);
+        switch (type){
+            case BANNER:
+                SUcGameSDk.getImpl().showBannerAd((Activity) context);
+                break;
+            case VIDEO:
+                SUcGameSDk.getImpl().showVideoAd((Activity) context);
+                break;
+            case SPLASH:
+                Activity activity= (Activity) context;
+                ViewGroup viewGroup = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+                SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
+                break;
+        }
     }
-    public void showSplashAd(Activity activity, ViewGroup viewGroup) {
+  /*  public void showSplashAd(Activity activity, ViewGroup viewGroup) {
         SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
     }
 
@@ -47,16 +60,11 @@ public class SGameSDK implements ISGameSDK {
 
     public void showVideoAd(Activity activity) {
         SUcGameSDk.getImpl().showVideoAd(activity);
-    }
-
-    public void showVAd(Activity activity, ViewGroup viewGroup) {
-        SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
-    }
-
+    }*/
 
     @Override
     public void logout(Context context, LoginCallback callback) {
-        SUcGameSDk.getImpl().logout((Activity) context);
+        SUcGameSDk.getImpl().logout((Activity) context,callback);
     }
 
 

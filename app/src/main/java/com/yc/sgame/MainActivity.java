@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.yc.sgame.core.AdCallback;
+import com.yc.sgame.core.AdType;
+import com.yc.sgame.core.Error;
+import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.LoginCallback;
-import com.yc.sgame.core.LoginError;
 import com.yc.sgame.core.SGameSDK;
 import com.yc.sgame.uc.BaseActivity;
 
@@ -23,7 +26,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         initViews();
-        SGameSDK.getImpl().init(this, null);
+        SGameSDK.getImpl().init(this, null, new InitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "initSGameSDK onSuccess:  success");
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Log.d(TAG, "initSGameSDK onFailure:  error" + error.getCode() + " -- " + error.getMessage());
+            }
+        });
     }
 
     private void initViews() {
@@ -50,19 +63,80 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onFailure(LoginError error) {
+                    public void onFailure(Error error) {
                         Log.d(TAG, "main_btn_login onFailure: login failure" + error.getCode() + " -- " + error.getMessage());
                     }
                 });
                 break;
             case R.id.mainb_btn_splash:
-                SGameSDK.getImpl().showSplashAd(MainActivity.this, mFlContainer);
+                SGameSDK.getImpl().showAd(MainActivity.this, AdType.SPLASH, new AdCallback() {
+                    @Override
+                    public void onDismissed() {
+
+                    }
+
+                    @Override
+                    public void onNoAd(Error error) {
+
+                    }
+
+                    @Override
+                    public void onPresent() {
+
+                    }
+
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
+//                SGameSDK.getImpl().showSplashAd(MainActivity.this, mFlContainer);
                 break;
             case R.id.mainb_btn_banner:
-                SGameSDK.getImpl().showBannerAd(MainActivity.this);
+                SGameSDK.getImpl().showAd(MainActivity.this, AdType.BANNER, new AdCallback() {
+                    @Override
+                    public void onDismissed() {
+
+                    }
+
+                    @Override
+                    public void onNoAd(Error error) {
+
+                    }
+
+                    @Override
+                    public void onPresent() {
+
+                    }
+
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
                 break;
             case R.id.mainb_btn_video:
-                SGameSDK.getImpl().showVideoAd(MainActivity.this);
+                SGameSDK.getImpl().showAd(MainActivity.this, AdType.VIDEO, new AdCallback() {
+                    @Override
+                    public void onDismissed() {
+
+                    }
+
+                    @Override
+                    public void onNoAd(Error error) {
+
+                    }
+
+                    @Override
+                    public void onPresent() {
+
+                    }
+
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
                 break;
         }
     }
