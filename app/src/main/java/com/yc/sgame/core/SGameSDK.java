@@ -17,4 +17,9 @@ public class SGameSDK implements ISGameSDK {
     public void showAd(Context context, AdType type, AdCallback callback) {
 
     }
+
+    @Override
+    public void logout(Context context) {
+        
+    }
 }
