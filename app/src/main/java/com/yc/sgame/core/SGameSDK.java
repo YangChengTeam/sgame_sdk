@@ -3,7 +3,7 @@ package com.yc.sgame.core;
 import android.content.Context;
 
 public class SGameSDK implements ISGameSDK {
-    
+
     private static SGameSDK sGameSDK;
 
     public static SGameSDK getImpl() {
@@ -17,11 +17,9 @@ public class SGameSDK implements ISGameSDK {
         return sGameSDK;
     }
 
-    private Config mConfig;
-
     @Override
     public void init(Context context, Config config) {
-        this.mConfig = config;
+
     }
 
     @Override

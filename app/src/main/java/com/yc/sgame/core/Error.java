@@ -1,6 +1,6 @@
 package com.yc.sgame.core;
 
-public class AdError {
+public class Error {
     private String code;
     private String message;
 
