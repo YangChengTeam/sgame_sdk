@@ -3,7 +3,6 @@ package com.yc.sgame.core;
 import android.content.Context;
 
 public class SGameSDK implements ISGameSDK {
-
     private static SGameSDK sGameSDK;
 
     public static SGameSDK getImpl() {
@@ -18,7 +17,7 @@ public class SGameSDK implements ISGameSDK {
     }
 
     @Override
-    public void init(Context context, Config config) {
+    public void init(Context context, Config config, InitCallback callback) {
 
     }
 
@@ -33,7 +32,7 @@ public class SGameSDK implements ISGameSDK {
     }
 
     @Override
-    public void logout(Context context) {
+    public void logout(Context context, LoginCallback callback) {
 
     }
 }

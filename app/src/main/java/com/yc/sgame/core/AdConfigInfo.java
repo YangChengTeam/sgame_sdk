@@ -4,6 +4,15 @@ public class AdConfigInfo {
     private String appId;
     private String appSecret;
     private String adId;
+    private Object ext;
+
+    public Object getExt() {
+        return ext;
+    }
+
+    public void setExt(Object ext) {
+        this.ext = ext;
+    }
 
     public String getAppId() {
         return appId;
