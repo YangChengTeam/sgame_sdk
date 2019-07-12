@@ -42,6 +42,9 @@ import cn.sirius.nga.NGASDKFactory;
 import cn.sirius.nga.properties.NGABannerController;
 import cn.sirius.nga.properties.NGABannerListener;
 import cn.sirius.nga.properties.NGABannerProperties;
+import cn.sirius.nga.properties.NGAInsertController;
+import cn.sirius.nga.properties.NGAInsertListener;
+import cn.sirius.nga.properties.NGAInsertProperties;
 import cn.sirius.nga.properties.NGAVideoController;
 import cn.sirius.nga.properties.NGAVideoListener;
 import cn.sirius.nga.properties.NGAVideoProperties;
@@ -103,7 +106,7 @@ public class SUcGameSDk implements ISGameSDK {
     public void login(Context context, LoginCallback callback) {
         this.mLoginCallback = callback;
         try {
-            UCGameSdk.defaultSdk().login(mActivity, null);
+            UCGameSdk.defaultSdk().login((Activity) context, null);
         } catch (AliLackActivityException e) {
             e.printStackTrace();
         } catch (AliNotInitException e) {
@@ -116,10 +119,10 @@ public class SUcGameSDk implements ISGameSDK {
         this.mAdCallback = callback;
         switch (type) {
             case BANNER:
-                loadBannerAd(mActivity);
+                loadBannerAd((Activity) context);
                 break;
             case VIDEO:
-                loadVideoAd(mActivity);
+                loadVideoAd((Activity) context);
                 break;
             case SPLASH:
                 Activity activity = (Activity) context;
@@ -129,11 +132,66 @@ public class SUcGameSDk implements ISGameSDK {
         }
     }
 
+    public void loadInsertAd(Activity activity) {  //插屏广告
+        NGAInsertProperties properties = new NGAInsertProperties(activity, AdConfig.appId, AdConfig.insertPosId, null);
+        properties.setListener(mInsertAdListener);
+        NGASDK ngasdk = NGASDKFactory.getNGASDK();
+        ngasdk.loadAd(properties);
+    }
+
+    NGAInsertListener mInsertAdListener = new NGAInsertListener() {
+
+        @Override
+        public void onShowAd() {
+
+        }
+
+
+        @Override
+        public void onRequestAd() {
+//            ToastUtil.show(TAG, "onRequestAd");
+        }
+
+        @Override
+        public <T extends NGAdController> void onReadyAd(T controller) {
+            NGAInsertController ngaInsertController = (NGAInsertController) controller;
+            if (ngaInsertController != null) {
+                ngaInsertController.showAd();
+                if (mAdCallback != null) {
+                    mAdCallback.onPresent();
+                }
+            }
+        }
+
+        @Override
+        public void onCloseAd() {
+            if (mAdCallback != null) {
+                mAdCallback.onDismissed();
+            }
+        }
+
+        @Override
+        public void onClickAd() {
+            if (mAdCallback != null) {
+                mAdCallback.onClick();
+            }
+        }
+
+        @Override
+        public void onErrorAd(int code, String message) {
+            if (mAdCallback != null) {
+                Error error = new Error();
+                error.setCode(String.valueOf(code));
+                error.setMessage(message);
+                mAdCallback.onNoAd(error);
+            }
+        }
+    };
+
 
     private RelativeLayout mBannerView;
     private ViewManager mWindowManager;
 
-    //为了提高广告的填充率以及曝光量，建议重新加载广告时候重新调用此方法，重新请求新的广告内容
     private void loadBannerAd(Activity activity) {
         if (mBannerView != null && mBannerView.getParent() != null) {
             mWindowManager.removeView(mBannerView);
@@ -245,15 +303,15 @@ public class SUcGameSDk implements ISGameSDK {
             mNGAVideoController = (NGAVideoController) controller;
             if (mNGAVideoController != null) {  //播放视频
                 mNGAVideoController.showAd();
+                if (mAdCallback != null) {
+                    mAdCallback.onPresent();
+                }
             }
         }
 
         @Override
         public void onShowAd() { // 03 播放
             Log.d(TAG, "VideoAdListener onShowAd: 01");
-            if (mAdCallback != null) {
-                mAdCallback.onPresent();
-            }
         }
 
         @Override
@@ -320,7 +378,6 @@ public class SUcGameSDk implements ISGameSDK {
             if (mAdCallback != null) {
                 mAdCallback.onPresent();
             }
-
         }
 
         @Override
@@ -329,11 +386,6 @@ public class SUcGameSDk implements ISGameSDK {
             //无论成功展示成功或失败都回调用该接口，所以开屏结束后的操作在该回调中实现
             if (mAdCallback != null) {
                 mAdCallback.onDismissed();
-            }
-
-            if (mActivity != null && !mActivity.isFinishing()) {
-                mActivity.startActivity(new Intent(mActivity, MainActivity.class));
-                mActivity.finish();
             }
         }
 
@@ -384,25 +436,28 @@ public class SUcGameSDk implements ISGameSDK {
                 public void run() {
                     isInitAdSuccess = true;
                     if (isInitAdSuccess && isInitGameSuccess) {
-                        mSGameInitCallback.onSuccess();
+                        if (mSGameInitCallback != null) {
+                            mSGameInitCallback.onSuccess();
+                        }
                     }
                 }
             });
         }
 
         @Override
-        public void fail(Throwable throwable) { //TODO 初始化失败
-
+        public void fail(Throwable throwable) {
+            if (mSGameInitCallback != null) {
+                Error error = new Error();
+                error.setCode("003");
+                mSGameInitCallback.onFailure(error);
+            }
         }
     };
 
     private void ucSdkInit(Activity activity) {
         ParamInfo gameParamInfo = new ParamInfo();
-
         gameParamInfo.setGameId(UCSdkConfig.gameId);
-
         gameParamInfo.setOrientation(UCOrientation.PORTRAIT);
-
         SDKParams sdkParams = new SDKParams();
         sdkParams.put(SDKParamKey.GAME_PARAMS, gameParamInfo);
 
@@ -431,7 +486,12 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Subscribe(event = SDKEventKey.ON_INIT_FAILED)
         private void onInitFailed(String data) {  //初始化账户失败
-
+            if (mSGameInitCallback != null) {
+                Error error = new Error();
+                error.setCode("004");
+                error.setMessage(data);
+                mSGameInitCallback.onFailure(error);
+            }
         }
 
         @Subscribe(event = SDKEventKey.ON_LOGIN_SUCC)

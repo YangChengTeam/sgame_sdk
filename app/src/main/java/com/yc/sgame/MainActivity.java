@@ -6,11 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Error;
-import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.LoginCallback;
 import com.yc.sgame.core.SGameSDK;
 import com.yc.sgame.uc.BaseActivity;
@@ -35,12 +35,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button btnSplash = findViewById(R.id.mainb_btn_splash);
         Button btnBanner = findViewById(R.id.mainb_btn_banner);
         Button btnVideo = findViewById(R.id.mainb_btn_video);
+        Button btnInsert= findViewById(R.id.mainb_btn_insert);
+        ImageView ivSwitch = findViewById(R.id.main_iv_switch);
         mFlContainer = findViewById(R.id.main_splash_container);
 
         btnLogin.setOnClickListener(this);
         btnSplash.setOnClickListener(this);
         btnBanner.setOnClickListener(this);
         btnVideo.setOnClickListener(this);
+        btnInsert.setOnClickListener(this);
+        ivSwitch.setOnClickListener(this);
     }
 
     @Override
@@ -61,28 +65,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.mainb_btn_splash:
                 startActivity(new Intent(MainActivity.this, SplashActivity.class));
-             /*   SGameSDK.getImpl().showAd(MainActivity.this, AdType.SPLASH, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
-
-                    }
-
-                    @Override
-                    public void onNoAd(Error error) {
-
-                    }
-
-                    @Override
-                    public void onPresent() {
-
-                    }
-
-                    @Override
-                    public void onClick() {
-
-                    }
-                });*/
-//                SGameSDK.getImpl().showSplashAd(MainActivity.this, mFlContainer);
                 break;
             case R.id.mainb_btn_banner:
                 SGameSDK.getImpl().showAd(MainActivity.this, AdType.BANNER, new AdCallback() {
@@ -129,6 +111,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                     }
                 });
+                break;
+            case R.id.mainb_btn_insert:
+                SGameSDK.getImpl().showInsertAd(MainActivity.this);
+                break;
+            case R.id.main_iv_switch:
+                switchOrientation();
                 break;
         }
     }

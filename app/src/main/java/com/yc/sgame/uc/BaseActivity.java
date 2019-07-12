@@ -57,7 +57,7 @@ public class BaseActivity extends Activity {
 		onBackPressed();
 	}
 
-	public void switchOrientation(View v) {
+	public void switchOrientation() {
 		if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		} else {

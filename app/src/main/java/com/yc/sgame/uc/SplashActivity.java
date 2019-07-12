@@ -1,5 +1,6 @@
 package com.yc.sgame.uc;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,16 +21,21 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+    }
 
+    @Override
+    protected void onRequestPermissionSuccess() {
+        super.onRequestPermissionSuccess();
 
         init();
     }
 
-
     private void init() {
+        Log.d(TAG, "initSGameSDK init: " );
         SGameSDK.getImpl().init(this, null, new InitCallback() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "initSGameSDK onSuccess: " );
                 showSplash();
             }
 
@@ -44,7 +50,10 @@ public class SplashActivity extends BaseActivity {
         SGameSDK.getImpl().showAd(this, AdType.SPLASH, new AdCallback() {
             @Override
             public void onDismissed() {
-
+                if (!SplashActivity.this.isFinishing()) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    SplashActivity.this.finish();
+                }
             }
 
             @Override
