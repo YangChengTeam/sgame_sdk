@@ -60,7 +60,8 @@ import static cn.sirius.nga.NGASDKFactory.getNGASDK;
 
 public class SUcGameSDk implements ISGameSDK {
 
-    private final String TAG = "SUcGameSDk";
+//    private final String TAG = "SUcGameSDk";
+    private final String TAG = "GameSdkLog";
 
 
     private boolean isInitGameSuccess = false;
@@ -370,7 +371,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onErrorAd(int code, String message) {
-            Log.d(TAG, "SplashAdListener onErrorAd: 06" + " code " + code + "  message " + message);
+            Log.d(TAG, "SplashAdListener onErrorAd: 06" + " code " + code + "  message " + message); //code 8201  message [5004-没有广告]
             if (mAdCallback != null) {
                 Error adError = new Error();
                 adError.setCode(String.valueOf(code));
@@ -439,6 +440,7 @@ public class SUcGameSDk implements ISGameSDK {
     private NGASDK.InitCallback mInitCallback = new NGASDK.InitCallback() {  //初始化
         @Override
         public void success() {
+            Log.d(TAG, "initSGameSDK initAd: success" );
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -454,6 +456,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void fail(Throwable throwable) {
+            Log.d(TAG, "initSGameSDK initAd: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
                 error.setCode("6003");
@@ -481,6 +484,7 @@ public class SUcGameSDk implements ISGameSDK {
     SDKEventReceiver receiver = new SDKEventReceiver() {
         @Subscribe(event = SDKEventKey.ON_INIT_SUCC)
         private void onInitSucc() {  //初始化账户成功
+            Log.d(TAG, "initSGameSDK initGame: success" );
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -494,6 +498,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Subscribe(event = SDKEventKey.ON_INIT_FAILED)
         private void onInitFailed(String data) {  //初始化账户失败
+            Log.d(TAG, "initSGameSDK initGame: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
                 error.setCode("6004");

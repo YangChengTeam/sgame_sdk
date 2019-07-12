@@ -1,10 +1,9 @@
-package com.yc.sgame.ui;
+package com.yc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.yc.sgame.R;
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Error;
@@ -12,14 +11,15 @@ import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.SGameSDK;
 import com.yc.sgame.uc.utils.ToastUtil;
 
-public class SplashActivity extends BaseActivity {
+public class GameSdkSplashActivity extends BaseActivity {
 
-    private String TAG = "SplashActivity";
+//    private String TAG = "GameSdkSplashActivity";
+    private String TAG = "GameSdkLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_game_sdk_splash);
     }
 
     @Override
@@ -55,15 +55,12 @@ public class SplashActivity extends BaseActivity {
         SGameSDK.getImpl().showAd(this, AdType.SPLASH, new AdCallback() {
             @Override
             public void onDismissed() {
-                if (!SplashActivity.this.isFinishing()) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    SplashActivity.this.finish();
-                }
+                startNext();
             }
 
             @Override
             public void onNoAd(Error error) {
-
+                startNext();
             }
 
             @Override
@@ -76,5 +73,12 @@ public class SplashActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void startNext() {
+        if (!GameSdkSplashActivity.this.isFinishing()) {
+            startActivity(new Intent(GameSdkSplashActivity.this, GameSdkMainActivity.class));
+            GameSdkSplashActivity.this.finish();
+        }
     }
 }
