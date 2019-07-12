@@ -6,7 +6,6 @@ import android.content.Context;
 import com.yc.sgame.uc.SUcGameSDk;
 
 public class SGameSDK implements ISGameSDK {
-
     private static SGameSDK sGameSDK;
 
     public static SGameSDK getImpl() {
@@ -19,7 +18,6 @@ public class SGameSDK implements ISGameSDK {
         }
         return sGameSDK;
     }
-
 
     @Override
     public void init(Context context, Config config, InitCallback callback) {
@@ -44,6 +42,4 @@ public class SGameSDK implements ISGameSDK {
     public void logout(Context context, LoginCallback callback) {
         SUcGameSDk.getImpl().logout(context, callback);
     }
-
-
 }
