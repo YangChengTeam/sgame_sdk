@@ -18,7 +18,6 @@ import com.yc.sgame.uc.SplashActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private FrameLayout mFlContainer;
     private String TAG = "MainActivity";
 
     @Override
@@ -37,7 +36,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button btnVideo = findViewById(R.id.mainb_btn_video);
         Button btnInsert= findViewById(R.id.mainb_btn_insert);
         ImageView ivSwitch = findViewById(R.id.main_iv_switch);
-        mFlContainer = findViewById(R.id.main_splash_container);
 
         btnLogin.setOnClickListener(this);
         btnSplash.setOnClickListener(this);

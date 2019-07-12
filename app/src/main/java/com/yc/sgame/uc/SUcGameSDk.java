@@ -132,6 +132,10 @@ public class SUcGameSDk implements ISGameSDK {
         }
     }
 
+    /**
+     * 插屏广告
+     * 部分广点通的插屏是只能竖屏的,广点通那边的问题
+     */
     public void loadInsertAd(Activity activity) {  //插屏广告
         NGAInsertProperties properties = new NGAInsertProperties(activity, AdConfig.appId, AdConfig.insertPosId, null);
         properties.setListener(mInsertAdListener);
@@ -143,18 +147,20 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onShowAd() {
-
+            Log.d(TAG, "InsertAdListener onShowAd:  ");
         }
 
 
         @Override
         public void onRequestAd() {
+            Log.d(TAG, "InsertAdListener onRequestAd:  ");
 //            ToastUtil.show(TAG, "onRequestAd");
         }
 
         @Override
         public <T extends NGAdController> void onReadyAd(T controller) {
             NGAInsertController ngaInsertController = (NGAInsertController) controller;
+            Log.d(TAG, "InsertAdListener onReadyAd:  ngaInsertController "+ngaInsertController);
             if (ngaInsertController != null) {
                 ngaInsertController.showAd();
                 if (mAdCallback != null) {
@@ -179,6 +185,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onErrorAd(int code, String message) {
+            Log.d(TAG, "InsertAdListener onErrorAd: code "+code+" message "+message);
             if (mAdCallback != null) {
                 Error error = new Error();
                 error.setCode(String.valueOf(code));
