@@ -1,6 +1,6 @@
 package com.yc.sgame;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +14,7 @@ import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.LoginCallback;
 import com.yc.sgame.core.SGameSDK;
 import com.yc.sgame.uc.BaseActivity;
+import com.yc.sgame.uc.SplashActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -26,17 +27,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         initViews();
-        SGameSDK.getImpl().init(this, null, new InitCallback() {
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "initSGameSDK onSuccess:  success");
-            }
 
-            @Override
-            public void onFailure(Error error) {
-                Log.d(TAG, "initSGameSDK onFailure:  error" + error.getCode() + " -- " + error.getMessage());
-            }
-        });
     }
 
     private void initViews() {
@@ -69,7 +60,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
                 break;
             case R.id.mainb_btn_splash:
-                SGameSDK.getImpl().showAd(MainActivity.this, AdType.SPLASH, new AdCallback() {
+                startActivity(new Intent(MainActivity.this, SplashActivity.class));
+             /*   SGameSDK.getImpl().showAd(MainActivity.this, AdType.SPLASH, new AdCallback() {
                     @Override
                     public void onDismissed() {
 
@@ -89,7 +81,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick() {
 
                     }
-                });
+                });*/
 //                SGameSDK.getImpl().showSplashAd(MainActivity.this, mFlContainer);
                 break;
             case R.id.mainb_btn_banner:

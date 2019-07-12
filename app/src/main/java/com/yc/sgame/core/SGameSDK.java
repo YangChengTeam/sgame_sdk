@@ -1,9 +1,6 @@
 package com.yc.sgame.core;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.yc.sgame.uc.SUcGameSDk;
 
@@ -23,48 +20,24 @@ public class SGameSDK implements ISGameSDK {
     }
 
 
-
     @Override
     public void init(Context context, Config config, InitCallback callback) {
-        SUcGameSDk.getImpl().init((Activity) context, config,callback);
+        SUcGameSDk.getImpl().init(context, config, callback);
     }
 
     @Override
     public void login(Context context, LoginCallback callback) {
-        SUcGameSDk.getImpl().login((Activity) context, callback);
+        SUcGameSDk.getImpl().login(context, callback);
     }
 
     @Override
     public void showAd(Context context, AdType type, AdCallback callback) {
-        switch (type){
-            case BANNER:
-                SUcGameSDk.getImpl().showBannerAd((Activity) context);
-                break;
-            case VIDEO:
-                SUcGameSDk.getImpl().showVideoAd((Activity) context);
-                break;
-            case SPLASH:
-                Activity activity= (Activity) context;
-                ViewGroup viewGroup = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-                SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
-                break;
-        }
+        SUcGameSDk.getImpl().showAd(context, type, callback);
     }
-  /*  public void showSplashAd(Activity activity, ViewGroup viewGroup) {
-        SUcGameSDk.getImpl().showSplashAd(activity, viewGroup);
-    }
-
-    public void showBannerAd(Activity activity) {
-        SUcGameSDk.getImpl().showBannerAd(activity);
-    }
-
-    public void showVideoAd(Activity activity) {
-        SUcGameSDk.getImpl().showVideoAd(activity);
-    }*/
 
     @Override
     public void logout(Context context, LoginCallback callback) {
-        SUcGameSDk.getImpl().logout((Activity) context,callback);
+        SUcGameSDk.getImpl().logout(context, callback);
     }
 
 
