@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.yc.sgame.MainActivity;
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Config;
@@ -124,6 +123,9 @@ public class SUcGameSDk implements ISGameSDK {
             case VIDEO:
                 loadVideoAd((Activity) context);
                 break;
+            case INSTER:
+                loadInsertAd((Activity) context);
+                break;
             case SPLASH:
                 Activity activity = (Activity) context;
                 ViewGroup viewGroup = activity.getWindow().getDecorView().findViewById(android.R.id.content);
@@ -136,7 +138,7 @@ public class SUcGameSDk implements ISGameSDK {
      * 插屏广告
      * 部分广点通的插屏是只能竖屏的,广点通那边的问题
      */
-    public void loadInsertAd(Activity activity) {  //插屏广告
+    private void loadInsertAd(Activity activity) {  //插屏广告
         NGAInsertProperties properties = new NGAInsertProperties(activity, AdConfig.appId, AdConfig.insertPosId, null);
         properties.setListener(mInsertAdListener);
         NGASDK ngasdk = NGASDKFactory.getNGASDK();
@@ -154,7 +156,6 @@ public class SUcGameSDk implements ISGameSDK {
         @Override
         public void onRequestAd() {
             Log.d(TAG, "InsertAdListener onRequestAd:  ");
-//            ToastUtil.show(TAG, "onRequestAd");
         }
 
         @Override
@@ -455,7 +456,7 @@ public class SUcGameSDk implements ISGameSDK {
         public void fail(Throwable throwable) {
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("003");
+                error.setCode("6003");
                 mSGameInitCallback.onFailure(error);
             }
         }
@@ -495,7 +496,7 @@ public class SUcGameSDk implements ISGameSDK {
         private void onInitFailed(String data) {  //初始化账户失败
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("004");
+                error.setCode("6004");
                 error.setMessage(data);
                 mSGameInitCallback.onFailure(error);
             }

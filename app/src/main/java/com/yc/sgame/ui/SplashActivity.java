@@ -1,17 +1,16 @@
-package com.yc.sgame.uc;
+package com.yc.sgame.ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.yc.sgame.MainActivity;
 import com.yc.sgame.R;
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Error;
 import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.SGameSDK;
+import com.yc.sgame.uc.utils.ToastUtil;
 
 public class SplashActivity extends BaseActivity {
 
@@ -42,6 +41,12 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onFailure(Error error) {
                 Log.d(TAG, "initSGameSDK onFailure:  error" + error.getCode() + " -- " + error.getMessage());
+                String code = error.getCode();
+                if("6003".equals(code)){ //初始化广告失败
+                    ToastUtil.show("初始化失败","广告初始化失败");
+                }else if("6004".equals(code)){ //初始化账户失败
+                    ToastUtil.show("初始化失败","账户初始化失败");
+                }
             }
         });
     }

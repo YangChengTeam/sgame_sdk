@@ -1,20 +1,18 @@
-package com.yc.sgame;
+package com.yc.sgame.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.yc.sgame.R;
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Error;
 import com.yc.sgame.core.LoginCallback;
 import com.yc.sgame.core.SGameSDK;
-import com.yc.sgame.uc.BaseActivity;
-import com.yc.sgame.uc.SplashActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -111,7 +109,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
                 break;
             case R.id.mainb_btn_insert:
-                SGameSDK.getImpl().showInsertAd(MainActivity.this);
+                SGameSDK.getImpl().showAd(MainActivity.this, AdType.INSTER, new AdCallback() {
+                    @Override
+                    public void onDismissed() {
+
+                    }
+
+                    @Override
+                    public void onNoAd(Error error) {
+
+                    }
+
+                    @Override
+                    public void onPresent() {
+
+                    }
+
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
                 break;
             case R.id.main_iv_switch:
                 switchOrientation();

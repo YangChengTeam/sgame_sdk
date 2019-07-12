@@ -1,4 +1,4 @@
-package com.yc.sgame.uc;
+package com.yc.sgame.ui;
 
 import android.Manifest;
 import android.annotation.TargetApi;
