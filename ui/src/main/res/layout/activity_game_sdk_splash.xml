@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.yc.ui.GameSdkSplashActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/splash_te_des"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content" />
+
 </android.support.constraint.ConstraintLayout>

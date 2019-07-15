@@ -30,7 +30,6 @@ public class GameSdkSplashActivity extends BaseActivity {
     }
 
     private void init() {
-        Log.d(TAG, "initSGameSDK init: " );
         SGameSDK.getImpl().init(this, null, new InitCallback() {
             @Override
             public void onSuccess() {
@@ -40,11 +39,11 @@ public class GameSdkSplashActivity extends BaseActivity {
 
             @Override
             public void onFailure(Error error) {
-                Log.d(TAG, "initSGameSDK onFailure:  error" + error.getCode() + " -- " + error.getMessage());
+                Log.d(TAG, "initSGameSDK onFailure:  error " + error.getCode() + " -- " + error.getMessage());
                 String code = error.getCode();
-                if("6003".equals(code)){ //初始化广告失败
+                if(String.valueOf(Error.AD_INIT_ERROR).equals(code)){ //初始化广告失败
                     ToastUtil.show("初始化失败","广告初始化失败");
-                }else if("6004".equals(code)){ //初始化账户失败
+                }else if(String.valueOf(Error.LOGIN_INIT_ERROR).equals(code)){ //初始化账户失败
                     ToastUtil.show("初始化失败","账户初始化失败");
                 }
             }
