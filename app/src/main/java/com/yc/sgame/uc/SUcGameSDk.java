@@ -20,6 +20,7 @@ import com.yc.sgame.core.Error;
 import com.yc.sgame.core.ISGameSDK;
 import com.yc.sgame.core.InitCallback;
 import com.yc.sgame.core.LoginCallback;
+import com.yc.sgame.core.LogoutCallback;
 import com.yc.sgame.uc.config.AdConfig;
 import com.yc.sgame.uc.config.UCSdkConfig;
 import com.yc.sgame.uc.utils.ToastUtil;
@@ -77,7 +78,7 @@ public class SUcGameSDk implements ISGameSDK {
 
     private static SUcGameSDk sUcGameSDk;
     private InitCallback mSGameInitCallback;
-    private LoginCallback mLogoutCallback;
+    private LogoutCallback mLogoutCallback;
 
     public static SUcGameSDk getImpl() {
         if (sUcGameSDk == null) {
@@ -190,7 +191,8 @@ public class SUcGameSDk implements ISGameSDK {
             Log.d(TAG, "InsertAdListener onErrorAd: code "+code+" message "+message);
             if (mAdCallback != null) {
                 Error error = new Error();
-                error.setCode(String.valueOf(code));
+                error.setCode(String.valueOf(Error.AD_ERROR));
+//                error.setCode(String.valueOf(code));
                 error.setMessage(message);
                 mAdCallback.onNoAd(error);
             }
@@ -247,31 +249,44 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onShowAd() {
-//            ToastUtil.show(TAG, "onShowAd");
+            if (mAdCallback != null) {
+                mAdCallback.onPresent();
+            }
         }
 
         @Override
         public void onCloseAd() {
             //广告关闭之后mController置null，鼓励加载广告重新调用loadAd，提高广告填充率
             mNGAVideoController = null;
-//            mBannerView.setVisibility(View.GONE);
-//            ToastUtil.show(TAG, "onCloseAd");
+            if (mAdCallback != null) {
+                mAdCallback.onDismissed();
+            }
         }
 
         @Override
         public void onErrorAd(int code, String message) {
             ToastUtil.show(TAG, "onErrorAd errorCode:" + code + ", message:" + message);
+            if (mAdCallback != null) {
+                Error error = new Error();
+                error.setCode(String.valueOf(Error.AD_ERROR));
+//                error.setCode(String.valueOf(code));
+                error.setMessage(message);
+                mAdCallback.onNoAd(error);
+            }
         }
 
         @Override
         public void onClickAd() {
 //            ToastUtil.show(TAG, "onClickAd");
+            if (mAdCallback != null) {
+                mAdCallback.onClick();
+            }
         }
     };
 
 
     @Override
-    public void logout(Context context, LoginCallback callback) {
+    public void logout(Context context, LogoutCallback callback) {
         this.mLogoutCallback = callback;
         try {
             UCGameSdk.defaultSdk().logout(mActivity, null);
@@ -347,11 +362,12 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onErrorAd(final int code, final String message) {
-            Log.d(TAG, "VideoAdListener onErrorAd: 04" + " code " + code + "  message " + message);
+            Log.d(TAG, "VideoAdListener onErrorAd: 04" + " ucsdk_code " + code + "  message " + message);
 //            ToastUtil.show(TAG, "onErrorAd " + " code " + code + "  message " + message);
             if (mAdCallback != null) {
                 Error adError = new Error();
-                adError.setCode(String.valueOf(code));
+                adError.setCode(String.valueOf(Error.AD_ERROR));
+//                adError.setCode(String.valueOf(code));
                 adError.setMessage(message);
                 mAdCallback.onNoAd(adError);
             }
@@ -374,7 +390,8 @@ public class SUcGameSDk implements ISGameSDK {
             Log.d(TAG, "SplashAdListener onErrorAd: 06" + " code " + code + "  message " + message); //code 8201  message [5004-没有广告]
             if (mAdCallback != null) {
                 Error adError = new Error();
-                adError.setCode(String.valueOf(code));
+                adError.setCode(String.valueOf(Error.AD_ERROR));
+//                adError.setCode(String.valueOf(code));
                 adError.setMessage(message);
                 mAdCallback.onNoAd(adError);
             }
@@ -459,7 +476,7 @@ public class SUcGameSDk implements ISGameSDK {
             Log.d(TAG, "initSGameSDK initAd: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("6003");
+                error.setCode(String.valueOf(Error.AD_INIT_ERROR));
                 mSGameInitCallback.onFailure(error);
             }
         }
@@ -501,7 +518,7 @@ public class SUcGameSDk implements ISGameSDK {
             Log.d(TAG, "initSGameSDK initGame: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("6004");
+                error.setCode(String.valueOf(Error.LOGIN_INIT_ERROR));
                 error.setMessage(data);
                 mSGameInitCallback.onFailure(error);
             }
@@ -521,6 +538,7 @@ public class SUcGameSDk implements ISGameSDK {
             if (mLoginCallback != null) {
                 Error loginError = new Error();
                 loginError.setMessage(desc);
+                loginError.setCode(String.valueOf(Error.LOGIN_ERROR));
                 mLoginCallback.onFailure(loginError);
             }
         }
@@ -536,6 +554,7 @@ public class SUcGameSDk implements ISGameSDK {
         private void onLogoutFailed() { //注销失败
             if (mLogoutCallback != null) {
                 Error loginError = new Error();
+                loginError.setCode(String.valueOf(Error.LOGOUT_ERROR));
                 mLogoutCallback.onFailure(loginError);
             }
         }

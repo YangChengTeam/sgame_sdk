@@ -35,7 +35,7 @@ public class SGameSDK implements ISGameSDK {
 
 
     @Override
-    public void logout(Context context, LoginCallback callback) {
+    public void logout(Context context, LogoutCallback callback) {
         SUcGameSDk.getImpl().logout(context, callback);
     }
 }
