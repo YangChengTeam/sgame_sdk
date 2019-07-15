@@ -1,4 +1,4 @@
-package com.yc.sgame.uc.config;
+package com.yc.ui.config;
 
 /**
  * SDK配置

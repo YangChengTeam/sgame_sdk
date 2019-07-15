@@ -1,4 +1,4 @@
-package com.yc.sgame.uc.config;
+package com.yc.ui.config;
 
 import java.util.HashMap;
 import java.util.Map;

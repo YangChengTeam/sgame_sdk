@@ -58,7 +58,7 @@
             android:windowSoftInputMode="adjustResize"
             tools:replace="android:configChanges" />
 
-        <meta-data
+       <!-- <meta-data
             android:name="UC_LOGIN_APPID"
             android:resource="@string/uc_login_appid" />
         <meta-data
@@ -75,7 +75,7 @@
             android:resource="@string/uc_ad_welcome_posid" />
         <meta-data
             android:name="UC_AD_INSERT_POSID"
-            android:resource="@string/uc_ad_insert_posid" />
+            android:resource="@string/uc_ad_insert_posid" />-->
 
     </application>
 
