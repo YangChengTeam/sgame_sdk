@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.yc.sgame.MainActivity;
 import com.yc.sgame.core.AdCallback;
 import com.yc.sgame.core.AdType;
 import com.yc.sgame.core.Config;
@@ -61,7 +60,8 @@ import static cn.sirius.nga.NGASDKFactory.getNGASDK;
 
 public class SUcGameSDk implements ISGameSDK {
 
-    private final String TAG = "SUcGameSDk";
+//    private final String TAG = "SUcGameSDk";
+    private final String TAG = "GameSdkLog";
 
 
     private boolean isInitGameSuccess = false;
@@ -124,6 +124,9 @@ public class SUcGameSDk implements ISGameSDK {
             case VIDEO:
                 loadVideoAd((Activity) context);
                 break;
+            case INSTER:
+                loadInsertAd((Activity) context);
+                break;
             case SPLASH:
                 Activity activity = (Activity) context;
                 ViewGroup viewGroup = activity.getWindow().getDecorView().findViewById(android.R.id.content);
@@ -132,7 +135,11 @@ public class SUcGameSDk implements ISGameSDK {
         }
     }
 
-    public void loadInsertAd(Activity activity) {  //插屏广告
+    /**
+     * 插屏广告
+     * 部分广点通的插屏是只能竖屏的,广点通那边的问题
+     */
+    private void loadInsertAd(Activity activity) {  //插屏广告
         NGAInsertProperties properties = new NGAInsertProperties(activity, AdConfig.appId, AdConfig.insertPosId, null);
         properties.setListener(mInsertAdListener);
         NGASDK ngasdk = NGASDKFactory.getNGASDK();
@@ -143,18 +150,19 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onShowAd() {
-
+            Log.d(TAG, "InsertAdListener onShowAd:  ");
         }
 
 
         @Override
         public void onRequestAd() {
-//            ToastUtil.show(TAG, "onRequestAd");
+            Log.d(TAG, "InsertAdListener onRequestAd:  ");
         }
 
         @Override
         public <T extends NGAdController> void onReadyAd(T controller) {
             NGAInsertController ngaInsertController = (NGAInsertController) controller;
+            Log.d(TAG, "InsertAdListener onReadyAd:  ngaInsertController "+ngaInsertController);
             if (ngaInsertController != null) {
                 ngaInsertController.showAd();
                 if (mAdCallback != null) {
@@ -179,6 +187,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onErrorAd(int code, String message) {
+            Log.d(TAG, "InsertAdListener onErrorAd: code "+code+" message "+message);
             if (mAdCallback != null) {
                 Error error = new Error();
                 error.setCode(String.valueOf(code));
@@ -362,7 +371,7 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void onErrorAd(int code, String message) {
-            Log.d(TAG, "SplashAdListener onErrorAd: 06" + " code " + code + "  message " + message);
+            Log.d(TAG, "SplashAdListener onErrorAd: 06" + " code " + code + "  message " + message); //code 8201  message [5004-没有广告]
             if (mAdCallback != null) {
                 Error adError = new Error();
                 adError.setCode(String.valueOf(code));
@@ -431,6 +440,7 @@ public class SUcGameSDk implements ISGameSDK {
     private NGASDK.InitCallback mInitCallback = new NGASDK.InitCallback() {  //初始化
         @Override
         public void success() {
+            Log.d(TAG, "initSGameSDK initAd: success" );
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -446,9 +456,10 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Override
         public void fail(Throwable throwable) {
+            Log.d(TAG, "initSGameSDK initAd: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("003");
+                error.setCode("6003");
                 mSGameInitCallback.onFailure(error);
             }
         }
@@ -473,6 +484,7 @@ public class SUcGameSDk implements ISGameSDK {
     SDKEventReceiver receiver = new SDKEventReceiver() {
         @Subscribe(event = SDKEventKey.ON_INIT_SUCC)
         private void onInitSucc() {  //初始化账户成功
+            Log.d(TAG, "initSGameSDK initGame: success" );
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -486,9 +498,10 @@ public class SUcGameSDk implements ISGameSDK {
 
         @Subscribe(event = SDKEventKey.ON_INIT_FAILED)
         private void onInitFailed(String data) {  //初始化账户失败
+            Log.d(TAG, "initSGameSDK initGame: fail" );
             if (mSGameInitCallback != null) {
                 Error error = new Error();
-                error.setCode("004");
+                error.setCode("6004");
                 error.setMessage(data);
                 mSGameInitCallback.onFailure(error);
             }
