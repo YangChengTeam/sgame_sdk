@@ -10,5 +10,5 @@ public interface ISGameSDK {
 
     void showAd(Context context, AdType type, AdCallback callback);
 
-    void logout(Context context, LoginCallback callback);
+    void logout(Context context, LogoutCallback callback);
 }
