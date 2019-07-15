@@ -23,15 +23,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"-->
     <application>
-        <activity android:name="com.yc.ui.GameSdkMainActivity"></activity>
-        <activity android:name="com.yc.ui.GameSdkSplashActivity">
-            <!--   <intent-filter>
-                       <action android:name="android.intent.action.MAIN" />
-
-                       <category android:name="android.intent.category.LAUNCHER" />
-                   </intent-filter>-->
-        </activity>
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -65,7 +56,27 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustResize"
-            tools:replace="android:configChanges"></activity>
+            tools:replace="android:configChanges" />
+
+        <meta-data
+            android:name="UC_LOGIN_APPID"
+            android:resource="@string/uc_login_appid" />
+        <meta-data
+            android:name="UC_AD_APPID"
+            android:resource="@string/uc_ad_appid" />
+        <meta-data
+            android:name="UC_AD_VIDEO_POSID"
+            android:resource="@string/uc_ad_video_posid" />
+        <meta-data
+            android:name="UC_AD_BANNER_POSID"
+            android:resource="@string/uc_ad_banner_posid" />
+        <meta-data
+            android:name="UC_AD_WELCOME_POSID"
+            android:resource="@string/uc_ad_welcome_posid" />
+        <meta-data
+            android:name="UC_AD_INSERT_POSID"
+            android:resource="@string/uc_ad_insert_posid" />
+
     </application>
 
 </manifest>
