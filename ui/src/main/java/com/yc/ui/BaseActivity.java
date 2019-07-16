@@ -15,7 +15,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yc.sgame.uc.utils.ToastUtil;
+
+import com.yc.ui.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

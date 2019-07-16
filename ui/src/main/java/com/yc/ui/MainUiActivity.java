@@ -13,5 +13,6 @@ public class MainUiActivity extends AppCompatActivity {
 
 
         startActivity(new Intent(this, GameSdkSplashActivity.class));
+
     }
 }
