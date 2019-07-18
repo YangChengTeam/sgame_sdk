@@ -14,7 +14,6 @@
         tools:replace="android:allowBackup">
         <activity android:name=".activity.AdSdkMainActivity"></activity>
         <activity android:name=".activity.TTSdkShowSplashActivity" />
-        <activity android:name=".activity.TTSdkSplashActivity" />
         <activity android:name=".AdUiMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

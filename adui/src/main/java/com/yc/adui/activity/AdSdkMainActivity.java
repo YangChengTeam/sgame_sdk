@@ -3,22 +3,15 @@ package com.yc.adui.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.bytedance.sdk.openadsdk.AdSlot;
-import com.bytedance.sdk.openadsdk.TTAdConstant;
-import com.bytedance.sdk.openadsdk.TTAdNative;
-import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
-import com.bytedance.sdk.openadsdk.TTInteractionAd;
+
 import com.yc.adsdk.core.AdCallback;
 import com.yc.adsdk.core.AdType;
 import com.yc.adsdk.core.Error;
 import com.yc.adsdk.core.SAdSDK;
-import com.yc.adsdk.tt.config.TTAdManagerHolder;
-import com.yc.adsdk.utils.ToastUtil;
 import com.yc.adui.R;
 
 public class AdSdkMainActivity extends AppCompatActivity implements View.OnClickListener {

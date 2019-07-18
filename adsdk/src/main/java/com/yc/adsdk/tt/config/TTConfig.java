@@ -15,6 +15,7 @@ public class TTConfig {
     private String ttAdbanner;
     private String ttAdbannerNative;
     private String ttAdbannerDownload;
+    private String ttAppName;
 
     public String getTtAdVideoNative() {
         return ttAdVideoNative;
@@ -86,5 +87,13 @@ public class TTConfig {
 
     public String getTtAdbannerDownload() {
         return ttAdbannerDownload;
+    }
+
+    public String getTtAppName() {
+        return ttAppName;
+    }
+
+    public void setTtAppName(String ttAppName) {
+        this.ttAppName = ttAppName;
     }
 }

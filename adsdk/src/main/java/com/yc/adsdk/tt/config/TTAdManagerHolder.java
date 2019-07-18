@@ -6,6 +6,7 @@ import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.yc.adsdk.core.Config;
 
 /**
  * 可以用一个单例来保存TTAdManager实例，在需要初始化sdk的时候调用
@@ -21,23 +22,26 @@ public class TTAdManagerHolder {
         return TTAdSdk.getAdManager();
     }
 
-    public static void init(Context context) {
-        doInit(context);
+    public static void init(Context context, Config config) {
+        doInit(context, config);
     }
 
     //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
-    private static void doInit(Context context) {
+    private static void doInit(Context context, Config config) {
         if (!sInit) {
-            TTAdSdk.init(context, buildConfig(context));
+            TTAdSdk.init(context, buildConfig(context, config));
             sInit = true;
         }
     }
 
-    private static TTAdConfig buildConfig(Context context) {
+    private static TTAdConfig buildConfig(Context context, Config config) {
+        String appId = config.getAppId();
+        TTConfig ttConfig = (TTConfig) config.getExt();
+        String ttAppName = ttConfig.getTtAppName();
         return new TTAdConfig.Builder()
-                .appId("5001121")
+                .appId(appId)
                 .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
-                .appName("APP测试媒体")
+                .appName(ttAppName)
                 .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
                 .allowShowNotify(true) //是否允许sdk展示通知栏提示
                 .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页

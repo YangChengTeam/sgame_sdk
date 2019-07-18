@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
 //        applicationId "com.yc.ui"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 26 //广告SDK支持的安卓平台版本为14~24，也就是4.0以上到7.0的都支持，包括视频内核。
         versionCode 1
         versionName "1.0"

@@ -13,13 +13,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdDislike;
@@ -68,7 +70,6 @@ public class STtAdSDk implements ISGameSDK {
     //开屏广告加载发生超时但是SDK没有及时回调结果的时候，做的一层保护。
 
     private AdCallback mAdCallback;
-    private InitCallback mInitCallback;
     private Context mShowAdContext;
     private Config mConfig;
 
@@ -91,9 +92,8 @@ public class STtAdSDk implements ISGameSDK {
 
     @Override
     public void init(Context context, Config config, InitCallback callback) {
-        TTAdManagerHolder.init(context);
+        TTAdManagerHolder.init(context, config);
         mConfig = config;
-        mInitCallback = callback;
     }
 
     @Override
@@ -165,16 +165,28 @@ public class STtAdSDk implements ISGameSDK {
         mTTAdNative.loadNativeAd(adSlot, new TTAdNative.NativeAdListener() {
             @Override
             public void onError(int code, String message) {
-                showToast("原生Banner " + "load error : " + code + ", " + message);
+//                showToast("原生Banner " + "load error : " + code + ", " + message);
+                Error error = new Error();
+                error.setTripartiteCode(code);
+                error.setMessage(message);
+                mAdCallback.onNoAd(error);
             }
 
             @Override
             public void onNativeAdLoad(List<TTNativeAd> ads) {
                 if (ads.get(0) == null) {
+                    Error error = new Error();
+                    error.setCode(String.valueOf(Error.AD_ERROR));
+                    error.setMessage("没有广告");
+                    mAdCallback.onNoAd(error);
                     return;
                 }
                 View bannerView = LayoutInflater.from(mShowAdContext).inflate(R.layout.native_ad, mSplashContainer, false);
                 if (bannerView == null) {
+                    Error error = new Error();
+                    error.setCode(String.valueOf(Error.AD_ERROR));
+                    error.setMessage("没有广告");
+                    mAdCallback.onNoAd(error);
                     return;
                 }
                 if (mCreativeButton != null) {
@@ -199,13 +211,13 @@ public class STtAdSDk implements ISGameSDK {
             TTImage image = nativeAd.getImageList().get(0);
             if (image != null && image.isValid()) {
                 ImageView im = nativeView.findViewById(R.id.iv_native_image);
-                Glide.with(mShowAdContext).load(image.getImageUrl()).into(im);
+//                Glide.with(mShowAdContext).load(image.getImageUrl()).into(im);
             }
         }
         TTImage icon = nativeAd.getIcon();
         if (icon != null && icon.isValid()) {
             ImageView im = nativeView.findViewById(R.id.iv_native_icon);
-            Glide.with(mShowAdContext).load(icon.getImageUrl()).into(im);
+//            Glide.with(mShowAdContext).load(icon.getImageUrl()).into(im);
         }
         mCreativeButton = (Button) nativeView.findViewById(R.id.btn_native_creative);
         //可根据广告类型，为交互区域设置不同提示信息
@@ -227,7 +239,7 @@ public class STtAdSDk implements ISGameSDK {
                 break;
             default:
                 mCreativeButton.setVisibility(View.GONE);
-                showToast("原生Banner " + "交互类型异常");
+//                showToast("原生Banner " + "交互类型异常");
         }
 
         //可以被点击的view, 也可以把nativeView放进来意味整个广告区域可被点击
@@ -245,21 +257,24 @@ public class STtAdSDk implements ISGameSDK {
             @Override
             public void onAdClicked(View view, TTNativeAd ad) {
                 if (ad != null) {
-                    showToast("原生Banner " + "广告" + ad.getTitle() + "被点击");
+                    mAdCallback.onClick();
+//                    showToast("原生Banner " + "广告" + ad.getTitle() + "被点击");
                 }
             }
 
             @Override
             public void onAdCreativeClick(View view, TTNativeAd ad) {
                 if (ad != null) {
-                    showToast("原生Banner " + "广告" + ad.getTitle() + "被创意按钮被点击");
+                    mAdCallback.onClick();
+//                    showToast("原生Banner " + "广告" + ad.getTitle() + "被创意按钮被点击");
                 }
             }
 
             @Override
             public void onAdShow(TTNativeAd ad) {
                 if (ad != null) {
-                    showToast("原生Banner " + "广告" + ad.getTitle() + "展示");
+                    mAdCallback.onPresent();
+//                    showToast("原生Banner " + "广告" + ad.getTitle() + "展示");
                 }
             }
         });
@@ -341,6 +356,8 @@ public class STtAdSDk implements ISGameSDK {
     };
 
 
+    private RelativeLayout mBannerView;
+    private ViewManager mWindowManager;
     /**
      * 加载Banner广告
      */
@@ -351,14 +368,20 @@ public class STtAdSDk implements ISGameSDK {
                 .setSupportDeepLink(true)
                 .setImageAcceptedSize(600, 257)
                 .build();
+
+        mBannerView = new RelativeLayout(mShowAdContext);
         //step5:请求广告，对请求回调的广告作渲染处理
         mTTAdNative.loadBannerAd(adSlot, new TTAdNative.BannerAdListener() {
 
             @Override
             public void onError(int code, String message) {
-                showToast("Banner展示 " + "load error : " + code + ", " + message);
+//                showToast("Banner展示 " + "load error : " + code + ", " + message);
                 Log.d(TAG, "onError: " + "load error : " + code + ", " + message);
-                mSplashContainer.removeAllViews();
+//                mSplashContainer.removeAllViews();
+                mBannerView.removeAllViews();
+                if (mBannerView != null && mBannerView.getParent() != null) {
+                    mWindowManager.removeView(mBannerView);
+                }
             }
 
             @Override
@@ -372,18 +395,28 @@ public class STtAdSDk implements ISGameSDK {
                 }
                 //设置轮播的时间间隔  间隔在30s到120秒之间的值，不设置默认不轮播
                 ad.setSlideIntervalTime(30 * 1000);
-                mSplashContainer.removeAllViews();
-                mSplashContainer.addView(bannerView);
+//                mSplashContainer.removeAllViews();
+//                mSplashContainer.addView(bannerView);
+                mBannerView.removeAllViews();
+                mBannerView.addView(bannerView);
+
+                WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.gravity = Gravity.BOTTOM | Gravity.CENTER;
+                params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                mWindowManager = (WindowManager) mShowAdContext.getSystemService(mShowAdContext.WINDOW_SERVICE);
+                mWindowManager.addView(mBannerView,params);
                 //设置广告互动监听回调
                 ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
                     @Override
                     public void onAdClicked(View view, int type) {
-                        showToast("Banner展示 " + "广告被点击");
+//                        showToast("Banner展示 " + "广告被点击");
                     }
 
                     @Override
                     public void onAdShow(View view, int type) {
-                        showToast("Banner展示 " + "广告展示");
+//                        showToast("Banner展示 " + "广告展示");
                     }
                 });
                 //（可选）设置下载类广告的下载监听
@@ -392,14 +425,15 @@ public class STtAdSDk implements ISGameSDK {
                 ad.setShowDislikeIcon(new TTAdDislike.DislikeInteractionCallback() {
                     @Override
                     public void onSelected(int position, String value) {
-                        showToast("Banner展示 " + "点击 " + value);
+//                        showToast("Banner展示 " + "点击 " + value);
                         //用户选择不喜欢原因后，移除广告展示
-                        mSplashContainer.removeAllViews();
+//                        mSplashContainer.removeAllViews();
+                        mBannerView.removeAllViews();
                     }
 
                     @Override
                     public void onCancel() {
-                        showToast("Banner展示 " + "点击取消 ");
+//                        showToast("Banner展示 " + "点击取消 ");
                     }
                 });
 
@@ -434,35 +468,35 @@ public class STtAdSDk implements ISGameSDK {
         ad.setDownloadListener(new TTAppDownloadListener() {
             @Override
             public void onIdle() {
-                showToast("Banner展示 " + "点击图片开始下载");
+//                showToast("Banner展示 " + "点击图片开始下载");
             }
 
             @Override
             public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
                 if (!mHasShowDownloadActive) {
                     mHasShowDownloadActive = true;
-                    showToast("Banner展示 " + "下载中，点击图片暂停");
+//                    showToast("Banner展示 " + "下载中，点击图片暂停");
                 }
             }
 
             @Override
             public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
-                showToast("Banner展示 " + "下载暂停，点击图片继续");
+//                showToast("Banner展示 " + "下载暂停，点击图片继续");
             }
 
             @Override
             public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
-                showToast("Banner展示 " + "下载失败，点击图片重新下载");
+//                showToast("Banner展示 " + "下载失败，点击图片重新下载");
             }
 
             @Override
             public void onInstalled(String fileName, String appName) {
-                showToast("Banner展示 " + "安装完成，点击图片打开");
+//                showToast("Banner展示 " + "安装完成，点击图片打开");
             }
 
             @Override
             public void onDownloadFinished(long totalBytes, String fileName, String appName) {
-                showToast("Banner展示 " + "点击图片安装");
+//                showToast("Banner展示 " + "点击图片安装");
             }
         });
     }
@@ -598,7 +632,7 @@ public class STtAdSDk implements ISGameSDK {
 
             @Override
             public void onFullScreenVideoAdLoad(TTFullScreenVideoAd ad) {
-                showToast("视频广告  " + "FullVideoAd loaded");
+//                showToast("视频广告  " + "FullVideoAd loaded");
                 mttFullVideoAd = ad;
                 mttFullVideoAd.setFullScreenVideoAdInteractionListener(new TTFullScreenVideoAd.FullScreenVideoAdInteractionListener() {
 
@@ -641,7 +675,7 @@ public class STtAdSDk implements ISGameSDK {
 
             @Override
             public void onFullScreenVideoCached() {
-                showToast("视频广告  " + "FullVideoAd video cached");
+//                showToast("视频广告  " + "FullVideoAd video cached");
             }
         });
     }
@@ -660,7 +694,7 @@ public class STtAdSDk implements ISGameSDK {
         mTTAdNative.loadInteractionAd(adSlot, new TTAdNative.InteractionAdListener() {
             @Override
             public void onError(int code, String message) {
-                showToast("code: " + code + "  message: " + message);
+//                showToast("code: " + code + "  message: " + message);
                 Error error = new Error();
                 error.setTripartiteCode(code);
                 error.setMessage(message);

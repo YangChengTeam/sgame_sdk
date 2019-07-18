@@ -5,7 +5,6 @@ import android.app.Application;
 import com.yc.adsdk.core.Config;
 import com.yc.adsdk.core.ISGameSDK;
 import com.yc.adsdk.tt.STtAdSDk;
-import com.yc.adsdk.tt.config.TTAdManagerHolder;
 import com.yc.adsdk.tt.config.TTConfig;
 
 /**
@@ -35,7 +34,9 @@ public class AdApplication extends Application {
         ttConfig.setTtAdbanner("901121987");
         ttConfig.setTtAdbannerDownload("901121895");
         ttConfig.setTtAdbannerNative("901121423");
+        ttConfig.setTtAppName("APP测试媒体");
         config.setExt(ttConfig);
+        config.setAppId("5001121");
 
         mISGameSDK.init(this, config);
     }

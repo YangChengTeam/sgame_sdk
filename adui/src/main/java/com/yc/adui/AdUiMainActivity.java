@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.yc.adsdk.utils.ToastUtil;
 import com.yc.adui.activity.TTSdkShowSplashActivity;
-import com.yc.adui.activity.TTSdkSplashActivity;
 
 public class AdUiMainActivity extends AppCompatActivity {
 
@@ -18,7 +17,6 @@ public class AdUiMainActivity extends AppCompatActivity {
         ToastUtil.init(getApplicationContext());
 
 
-//        startActivity(new Intent(AdUiMainActivity.this, TTSdkSplashActivity.class));
         startActivity(new Intent(AdUiMainActivity.this, TTSdkShowSplashActivity.class));
 
 
