@@ -98,6 +98,11 @@ public class STtAdSDk implements ISGameSDK {
 
     @Override
     public void showAd(Context context, AdType type, AdCallback callback) {
+        this.showAd(context, type, callback, null);
+    }
+
+    @Override
+    public void showAd(Context context, AdType type, AdCallback callback, ViewGroup viewGroup) {
         TTConfig ttConfig = (TTConfig) mConfig.getExt();
         mTTAdNative = TTAdManagerHolder.get().createAdNative(context);
         mAdCallback = callback;
@@ -138,12 +143,17 @@ public class STtAdSDk implements ISGameSDK {
             case SPLASH:
                 //定时，AD_TIME_OUT时间到时执行，如果开屏广告没有加载则跳转到主页面
                 mHandler.sendEmptyMessageDelayed(MSG_GO_MAIN, AD_TIME_OUT);
-                activity = (Activity) context;
-                mSplashContainer = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+                if (viewGroup != null) {
+                    mSplashContainer = viewGroup;
+                } else {
+                    activity = (Activity) context;
+                    mSplashContainer = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+                }
                 loadSplashAd(ttConfig.getTtAdSplash());  // 加载开屏广告
                 break;
         }
     }
+
 
     private Button mCreativeButton;
 
@@ -358,6 +368,7 @@ public class STtAdSDk implements ISGameSDK {
 
     private RelativeLayout mBannerView;
     private ViewManager mWindowManager;
+
     /**
      * 加载Banner广告
      */
@@ -406,7 +417,7 @@ public class STtAdSDk implements ISGameSDK {
                 params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                 params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 mWindowManager = (WindowManager) mShowAdContext.getSystemService(mShowAdContext.WINDOW_SERVICE);
-                mWindowManager.addView(mBannerView,params);
+                mWindowManager.addView(mBannerView, params);
                 //设置广告互动监听回调
                 ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
                     @Override

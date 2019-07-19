@@ -14,4 +14,10 @@
         android:text="TTSdkShowSplashActivity"
         android:layout_height="wrap_content" />
 
+    <FrameLayout
+        android:id="@+id/ttsdk_show_splash_fl_con"
+        app:layout_constraintTop_toBottomOf="@+id/ttsdk_show_splash_tv_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </android.support.constraint.ConstraintLayout>

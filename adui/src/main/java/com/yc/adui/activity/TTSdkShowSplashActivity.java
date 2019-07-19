@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yc.adsdk.core.AdCallback;
@@ -24,6 +25,9 @@ public class TTSdkShowSplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ttsdk_show_splash);
 
         Log.d("mylog", "onCreate: TTSdkShowSplashActivity");
+
+
+        FrameLayout flCon= findViewById(R.id.ttsdk_show_splash_fl_con);
 
         SAdSDK.getImpl().showAd(TTSdkShowSplashActivity.this, AdType.SPLASH, new AdCallback() {
             @Override
@@ -45,7 +49,7 @@ public class TTSdkShowSplashActivity extends AppCompatActivity {
             public void onClick() {
 
             }
-        });
+        },flCon);
     }
 
     /**
