@@ -3,79 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yc.sgame">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!-- android:allowBackup="true"
+    <application
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup"-->
-    <application>
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/adp_file_path" />
-        </provider> <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值 -->
-        <provider
-            android:name="com.mintegral.msdk.MintegralFileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/adp_file_path" />
-        </provider>
-        <provider
-            android:name="com.uniplay.adsdk.UniPlayFileProvider"
-            android:authorities="${applicationId}.uniplay.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/adp_file_path" />
-        </provider>
+        tools:replace="android:allowBackup">
+        <activity android:name=".HomeAppActivity"></activity>
+        <activity android:name=".MainAppActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity
-            android:name="cn.sirius.nga.activity.ProxyActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustResize"
-            tools:replace="android:configChanges" />
-
-        <meta-data
-            android:name="UC_LOGIN_APPID"
-            android:resource="@string/uc_login_appid" />
-        <meta-data
-            android:name="UC_AD_APPID"
-            android:resource="@string/uc_ad_appid" />
-        <meta-data
-            android:name="UC_AD_VIDEO_POSID"
-            android:resource="@string/uc_ad_video_posid" />
-        <meta-data
-            android:name="UC_AD_BANNER_POSID"
-            android:resource="@string/uc_ad_banner_posid" />
-        <meta-data
-            android:name="UC_AD_WELCOME_POSID"
-            android:resource="@string/uc_ad_welcome_posid" />
-        <meta-data
-            android:name="UC_AD_INSERT_POSID"
-            android:resource="@string/uc_ad_insert_posid" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

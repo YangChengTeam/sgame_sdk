@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ui</string>
+
+    <!--<string name="uc_login_appid">119474</string>--> <!--网络游戏-->
+    <string name="uc_login_appid">556324</string> <!--单机游戏-->
+    <string name="uc_ad_appid">1000004107</string>
+    <string name="uc_ad_video_posid">1475893508926018</string>
+    <string name="uc_ad_banner_posid">1476429649994173</string>
+    <string name="uc_ad_welcome_posid">1498731130656389</string>
+    <string name="uc_ad_insert_posid">1476429649994172</string>
+
 </resources>

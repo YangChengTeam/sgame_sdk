@@ -1,1 +1,1 @@
-include ':app', ':ui', ':adsdk', ':adui'
+include ':app', ':ui', ':adsdk', ':adui', ':ucGame', ':ucAd', ':ucConGame'

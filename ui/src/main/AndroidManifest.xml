@@ -3,6 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yc.ui">
 
+    <!--<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    ​
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />-->
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,6 +33,26 @@
         </activity>
         <activity android:name=".GameSdkSplashActivity" />
         <activity android:name=".GameSdkMainActivity" />
+
+        <meta-data
+            android:name="UC_LOGIN_APPID"
+            android:resource="@string/uc_login_appid" />
+        <meta-data
+            android:name="UC_AD_APPID"
+            android:resource="@string/uc_ad_appid" />
+        <meta-data
+            android:name="UC_AD_VIDEO_POSID"
+            android:resource="@string/uc_ad_video_posid" />
+        <meta-data
+            android:name="UC_AD_BANNER_POSID"
+            android:resource="@string/uc_ad_banner_posid" />
+        <meta-data
+            android:name="UC_AD_WELCOME_POSID"
+            android:resource="@string/uc_ad_welcome_posid" />
+        <meta-data
+            android:name="UC_AD_INSERT_POSID"
+            android:resource="@string/uc_ad_insert_posid" />
+
     </application>
 
 </manifest>

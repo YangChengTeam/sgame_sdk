@@ -1,19 +1,17 @@
-apply plugin: 'com.android.library'
-//apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
-//        applicationId "com.yc.ui"
+        applicationId "com.yc.ui"
         minSdkVersion 15
         targetSdkVersion 26 //广告SDK支持的安卓平台版本为14~24，也就是4.0以上到7.0的都支持，包括视频内核。
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -22,12 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 repositories {
     flatDir {
-        dirs '../app/libs', 'libs'
+        dirs '../app/libs', '../ucad/libs', 'libs'
     }
 }
 
@@ -39,5 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(path: ':app')
+    implementation project(path: ':ucAd')
+    implementation project(path: ':ucConGame')
 }

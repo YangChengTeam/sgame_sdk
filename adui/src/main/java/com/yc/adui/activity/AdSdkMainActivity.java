@@ -48,195 +48,186 @@ public class AdSdkMainActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ad_sdk_main_btn_inster:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.INSTER, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+        int id = v.getId();
+        if (id == R.id.ad_sdk_main_btn_inster) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.INSTER, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_inster_download:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.INSTER_DOWNLOAD, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_inster_download) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.INSTER_DOWNLOAD, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_video_h:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_video_h) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_video_v:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO_V, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_video_v) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO_V, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_video_native:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO_NATIVE, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_video_native) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO_NATIVE, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_splash:
-                startActivity(new Intent(AdSdkMainActivity.this, TTSdkShowSplashActivity.class));
-                finish();
-                break;
-            case R.id.ad_sdk_main_btn_banner:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_splash) {
+            startActivity(new Intent(AdSdkMainActivity.this, TTSdkShowSplashActivity.class));
+            finish();
+        } else if (id == R.id.ad_sdk_main_btn_banner) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_banner_download:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER_DOWNLOAD, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_banner_download) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER_DOWNLOAD, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
-            case R.id.ad_sdk_main_btn_banner_native:
-                SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER_NATIVE, new AdCallback() {
-                    @Override
-                    public void onDismissed() {
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_banner_native) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.BANNER_NATIVE, new AdCallback() {
+                @Override
+                public void onDismissed() {
 
-                    }
+                }
 
-                    @Override
-                    public void onNoAd(Error error) {
+                @Override
+                public void onNoAd(Error error) {
 
-                    }
+                }
 
-                    @Override
-                    public void onPresent() {
+                @Override
+                public void onPresent() {
 
-                    }
+                }
 
-                    @Override
-                    public void onClick() {
+                @Override
+                public void onClick() {
 
-                    }
-                });
-                break;
+                }
+            });
         }
     }
 

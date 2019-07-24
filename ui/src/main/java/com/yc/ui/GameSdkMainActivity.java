@@ -7,15 +7,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.yc.sgame.core.AdCallback;
-import com.yc.sgame.core.AdType;
-import com.yc.sgame.core.Error;
-import com.yc.sgame.core.LoginCallback;
-import com.yc.sgame.core.SGameSDK;
+import com.xxj.uccong.core.GameConError;
+import com.xxj.uccong.core.InitCallback;
+import com.xxj.uccong.core.LoginCallback;
+import com.xxj.uccong.core.LogoutCallback;
+import com.xxj.uccong.core.SGameSDK;
+import com.xxj.uccong.utils.ToastUtil;
+import com.xxj.ucad.core.AdCallback;
+import com.xxj.ucad.core.AdError;
+import com.xxj.ucad.core.AdType;
+import com.xxj.ucad.core.SAdSDK;
+//import com.yc.sgame.core.Error;
+//import com.yc.sgame.core.InitCallback;
+//import com.yc.sgame.core.LoginCallback;
+//import com.yc.sgame.core.LogoutCallback;
+//import com.yc.sgame.uc.utils.ToastUtil;
 
 public class GameSdkMainActivity extends BaseActivity implements View.OnClickListener {
 
-    //    private String TAG = "GameSdkMainActivity";
     private String TAG = "GameSdkLog";
 
 
@@ -26,10 +35,41 @@ public class GameSdkMainActivity extends BaseActivity implements View.OnClickLis
 
         initViews();
 
+        initGameSdk();
+    }
+
+    private void initGameSdk() {
+        ToastUtil.init(getApplicationContext());
+        /*SGameSDK.getImpl().init(this, null, new InitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "initSGameSDK onSuccess: ");
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Log.d(TAG, "initSGameSDK onFailure:  error " + error.getCode() + " -- " + error.getMessage());
+                ToastUtil.show("初始化失败", "账户初始化失败");
+            }
+        });*/
+
+        SGameSDK.getImpl().init(this, null, new InitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "initSGameSDK onSuccess: ");
+            }
+
+            @Override
+            public void onFailure(GameConError error) {
+                Log.d(TAG, "initSGameSDK onFailure:  error " + error.getCode() + " -- " + error.getMessage());
+                ToastUtil.show("初始化失败", "账户初始化失败");
+            }
+        });
     }
 
     private void initViews() {
         Button btnLogin = findViewById(R.id.main_btn_login);
+        Button btnLogout = findViewById(R.id.main_btn_logout);
         Button btnSplash = findViewById(R.id.mainb_btn_splash);
         Button btnBanner = findViewById(R.id.mainb_btn_banner);
         Button btnVideo = findViewById(R.id.mainb_btn_video);
@@ -37,6 +77,7 @@ public class GameSdkMainActivity extends BaseActivity implements View.OnClickLis
         ImageView ivSwitch = findViewById(R.id.main_iv_switch);
 
         btnLogin.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
         btnSplash.setOnClickListener(this);
         btnBanner.setOnClickListener(this);
         btnVideo.setOnClickListener(this);
@@ -55,21 +96,33 @@ public class GameSdkMainActivity extends BaseActivity implements View.OnClickLis
                 }
 
                 @Override
-                public void onFailure(Error error) {
+                public void onFailure(GameConError error) {
                     Log.d(TAG, "main_btn_login onFailure: login failure" + error.getCode() + " -- " + error.getMessage());
+                }
+            });
+        } else if (i == R.id.main_btn_logout) {
+            SGameSDK.getImpl().logout(GameSdkMainActivity.this, new LogoutCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "main_btn_login onSuccess: logout success");
+                }
+
+                @Override
+                public void onFailure(GameConError error) {
+                    Log.d(TAG, "main_btn_login onFailure: logout failure" + error.getCode() + " -- " + error.getMessage());
                 }
             });
         } else if (i == R.id.mainb_btn_splash) {
             startActivity(new Intent(GameSdkMainActivity.this, GameSdkSplashActivity.class));
         } else if (i == R.id.mainb_btn_banner) {
-            SGameSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.BANNER, new AdCallback() {
+            SAdSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.BANNER, new AdCallback() {
                 @Override
                 public void onDismissed() {
 
                 }
 
                 @Override
-                public void onNoAd(Error error) {
+                public void onNoAd(AdError error) {
 
                 }
 
@@ -84,14 +137,14 @@ public class GameSdkMainActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         } else if (i == R.id.mainb_btn_video) {
-            SGameSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.VIDEO, new AdCallback() {
+            SAdSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.VIDEO, new AdCallback() {
                 @Override
                 public void onDismissed() {
 
                 }
 
                 @Override
-                public void onNoAd(Error error) {
+                public void onNoAd(AdError error) {
 
                 }
 
@@ -106,14 +159,14 @@ public class GameSdkMainActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         } else if (i == R.id.mainb_btn_insert) {
-            SGameSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.INSTER, new AdCallback() {
+            SAdSDK.getImpl().showAd(GameSdkMainActivity.this, AdType.INSTER, new AdCallback() {
                 @Override
                 public void onDismissed() {
 
                 }
 
                 @Override
-                public void onNoAd(Error error) {
+                public void onNoAd(AdError error) {
 
                 }
 
