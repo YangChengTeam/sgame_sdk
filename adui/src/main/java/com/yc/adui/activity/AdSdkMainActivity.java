@@ -28,6 +28,7 @@ public class AdSdkMainActivity extends AppCompatActivity implements View.OnClick
         Button btnInsterDownload = findViewById(R.id.ad_sdk_main_btn_inster_download);
         Button btnVideoV = findViewById(R.id.ad_sdk_main_btn_video_v);
         Button btnVideoH = findViewById(R.id.ad_sdk_main_btn_video_h);
+        Button btnVideoReward = findViewById(R.id.ad_sdk_main_btn_video_reward);
         Button btnVideoNative = findViewById(R.id.ad_sdk_main_btn_video_native);
         Button btnSplash = findViewById(R.id.ad_sdk_main_btn_splash);
         Button btnBanner = findViewById(R.id.ad_sdk_main_btn_banner);
@@ -38,6 +39,7 @@ public class AdSdkMainActivity extends AppCompatActivity implements View.OnClick
         btnInsterDownload.setOnClickListener(this);
         btnVideoV.setOnClickListener(this);
         btnVideoH.setOnClickListener(this);
+        btnVideoReward.setOnClickListener(this);
         btnVideoNative.setOnClickListener(this);
         btnSplash.setOnClickListener(this);
         btnBanner.setOnClickListener(this);
@@ -95,6 +97,28 @@ public class AdSdkMainActivity extends AppCompatActivity implements View.OnClick
             });
         } else if (id == R.id.ad_sdk_main_btn_video_h) {
             SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO, new AdCallback() {
+                @Override
+                public void onDismissed() {
+
+                }
+
+                @Override
+                public void onNoAd(Error error) {
+
+                }
+
+                @Override
+                public void onPresent() {
+
+                }
+
+                @Override
+                public void onClick() {
+
+                }
+            });
+        } else if (id == R.id.ad_sdk_main_btn_video_reward) {
+            SAdSDK.getImpl().showAd(AdSdkMainActivity.this, AdType.VIDEO_REWARD, new AdCallback() {
                 @Override
                 public void onDismissed() {
 

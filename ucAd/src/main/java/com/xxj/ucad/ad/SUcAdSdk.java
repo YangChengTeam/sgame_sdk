@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.xxj.ucad.core.AdCallback;
 import com.xxj.ucad.core.AdConfigInfo;
 import com.xxj.ucad.core.AdType;
+import com.xxj.ucad.core.AdTypeHind;
 import com.xxj.ucad.core.Config;
 import com.xxj.ucad.core.AdError;
 import com.xxj.ucad.core.ISGameSDK;
@@ -52,6 +54,9 @@ public class SUcAdSdk implements ISGameSDK {
     private static SUcAdSdk sUcAdSdk;
     private InitCallback mSAdSDKInitCallback;
     private String adAppId;
+    private NGASDK mNgasdk;
+    private NGABannerController mNgaBannerController;
+
 
     public static SUcAdSdk getImpl() {
         if (sUcAdSdk == null) {
@@ -83,7 +88,6 @@ public class SUcAdSdk implements ISGameSDK {
         this.mHandler = new Handler(Looper.getMainLooper());
 
 
-
         AdConfigInfo adConfigInfo = config.getAdConfigInfo();
         String bannerPosId = adConfigInfo.getBannerPosId();
         String insertPosId = adConfigInfo.getInsertPosId();
@@ -93,13 +97,15 @@ public class SUcAdSdk implements ISGameSDK {
         this.adAppId = adId;
 
         if (TextUtils.isEmpty(adAppId)) {
-            ToastUtil.show(TAG, "初始化失败，请在String.xml文件文件配置广告appId  5  code:00045");
+            ToastUtil.show(TAG, "初始化失败，缺少广告媒体ID  5  code:00045");
             return;
         }
         if (TextUtils.isEmpty(bannerPosId) || TextUtils.isEmpty(insertPosId) || TextUtils.isEmpty(videoPosId) || TextUtils.isEmpty(welcomeId)) {
-            ToastUtil.show(TAG, "初始化失败，请在String.xml文件文件配置广告PosId  6  code:00055");
+            ToastUtil.show(TAG, "初始化失败，缺少广告位ID 6  code:00055");
             return;
         }
+
+        Log.d(TAG, "init: ids " + " adAppId " + adAppId + " bannerPosId " + bannerPosId + " insertPosId " + insertPosId + " videoPosId " + videoPosId + " welcomeId " + welcomeId);
 
         this.bannerPosId = bannerPosId;
         this.insertPosId = insertPosId;
@@ -123,6 +129,7 @@ public class SUcAdSdk implements ISGameSDK {
     private NGASDK.InitCallback mInitCallback = new NGASDK.InitCallback() {  //初始化
         @Override
         public void success() {
+            Log.d(TAG, "success: initAd: success");
             Log.d(TAG, "initSGameSDK initAd: success");
             mHandler.post(new Runnable() {
                 @Override
@@ -136,6 +143,7 @@ public class SUcAdSdk implements ISGameSDK {
 
         @Override
         public void fail(Throwable throwable) {
+            Log.d(TAG, "success: initAd: success");
             Log.d(TAG, "initSGameSDK initAd: fail");
             if (mSAdSDKInitCallback != null) {
                 AdError error = new AdError();
@@ -167,6 +175,17 @@ public class SUcAdSdk implements ISGameSDK {
         }
     }
 
+    @Override
+    public void hindAd(AdTypeHind type) {
+        switch (type) {
+            case BANNER:
+                if (mBannerView != null && mBannerView.getVisibility() != View.GONE) {
+                    mBannerView.setVisibility(View.GONE); //// 若需要默认横幅广告不展示
+                }
+                break;
+        }
+    }
+
     /**
      * 插屏广告
      * 部分广点通的插屏是只能竖屏的,广点通那边的问题
@@ -176,11 +195,14 @@ public class SUcAdSdk implements ISGameSDK {
             ToastUtil.show(TAG, "初始化失败，请在清单文件配置广告appId  8  code:00045");
             return;
         }
-//        NGAInsertProperties properties = new NGAInsertProperties(activity, AdConfig.appId, AdConfig.insertPosId, null);
+
+        Log.d(TAG, "loadBannerAd: adAppId " + adAppId + " insertPosId " + insertPosId);
         NGAInsertProperties properties = new NGAInsertProperties(activity, adAppId, insertPosId, null);
         properties.setListener(mInsertAdListener);
-        NGASDK ngasdk = NGASDKFactory.getNGASDK();
+        NGASDK ngasdk = getNGASDK();
         ngasdk.loadAd(properties);
+
+
     }
 
     NGAInsertListener mInsertAdListener = new NGAInsertListener() {
@@ -264,8 +286,8 @@ public class SUcAdSdk implements ISGameSDK {
 
         NGABannerProperties properties = new NGABannerProperties(activity, adAppId, bannerPosId, mBannerView);
         properties.setListener(mBannerAdListener);
-        NGASDK ngasdk = NGASDKFactory.getNGASDK();
-        ngasdk.loadAd(properties);
+        mNgasdk = NGASDKFactory.getNGASDK();
+        mNgasdk.loadAd(properties);
     }
 
     //注意：请在Activity成员变量保存，使用匿名内部类可能导致回收
@@ -277,12 +299,9 @@ public class SUcAdSdk implements ISGameSDK {
 
         @Override
         public <T extends NGAdController> void onReadyAd(T controller) {
-            NGABannerController ngaBannerController = (NGABannerController) controller;
-//            ToastUtil.show(TAG, "onReadyAd");
-//            showAd(BannerActivity.this);
-            if (ngaBannerController != null) {
-                ngaBannerController.showAd();
-//                mBannerView.setVisibility(View.VISIBLE);
+            mNgaBannerController = (NGABannerController) controller;
+            if (mNgaBannerController != null) {
+                mNgaBannerController.showAd();
             }
         }
 
@@ -296,7 +315,7 @@ public class SUcAdSdk implements ISGameSDK {
         @Override
         public void onCloseAd() {
             //广告关闭之后mController置null，鼓励加载广告重新调用loadAd，提高广告填充率
-            mNGAVideoController = null;
+            mNgaBannerController = null;
             if (mAdCallback != null) {
                 mAdCallback.onDismissed();
             }
@@ -312,6 +331,7 @@ public class SUcAdSdk implements ISGameSDK {
                 error.setMessage(message);
                 mAdCallback.onNoAd(error);
             }
+
         }
 
         @Override
@@ -323,11 +343,14 @@ public class SUcAdSdk implements ISGameSDK {
         }
     };
 
+
     private void loadVideoAd(Activity activity) {
         if (TextUtils.isEmpty(adAppId)) {
             ToastUtil.show(TAG, "初始化失败，请在清单文件配置广告appId 13   code:00045");
             return;
         }
+
+        Log.d(TAG, "loadBannerAd: adAppId " + adAppId + " videoPosId " + videoPosId);
         NGAVideoProperties properties = new NGAVideoProperties(activity, adAppId, videoPosId);
         properties.setListener(mVideoAdListener);
         NGASDK ngasdk = NGASDKFactory.getNGASDK();
@@ -339,6 +362,8 @@ public class SUcAdSdk implements ISGameSDK {
             ToastUtil.show(TAG, "初始化失败，请在清单文件配置广告appId 14  code:00045");
             return;
         }
+
+        Log.d(TAG, "loadBannerAd: adAppId " + adAppId + " welcomeId " + welcomeId);
         NGAWelcomeProperties properties = new NGAWelcomeProperties(activity, adAppId, welcomeId, container);
         // 支持开发者自定义的跳过按钮。SDK要求skipContainer一定在传入后要处于VISIBLE状态，且其宽高都不得小于3x3dp。
         // 如果需要使用SDK默认的跳过按钮，可以选择上面两个构造方法。
@@ -394,9 +419,9 @@ public class SUcAdSdk implements ISGameSDK {
         }
 
         @Override
-        public void onErrorAd(final int code, final String message) {
+        public void onErrorAd(int code, String message) {
             Log.d(TAG, "VideoAdListener onErrorAd: 04" + " ucsdk_code " + code + "  message " + message);
-//            ToastUtil.show(TAG, "onErrorAd " + " code " + code + "  message " + message);
+//            showCacheVideoAd(code, message);
             if (mAdCallback != null) {
                 AdError adError = new AdError();
                 adError.setCode(String.valueOf(AdError.AD_ERROR));
@@ -406,6 +431,27 @@ public class SUcAdSdk implements ISGameSDK {
             }
         }
     };
+
+    private void showCacheVideoAd(final int code, final String message) {
+        Log.d(TAG, "showCacheVideoAd: VideoAdListener 视频广告加载失败，准备播放缓存");
+        Log.d(TAG, "showCacheVideoAd: ");
+        if (mNGAVideoController != null) {
+            Log.d(TAG, "showCacheVideoAd: VideoAdListener 视频广告加载失败，准备缓存 01");
+            if (mNGAVideoController.hasCacheAd()) {
+                Log.d(TAG, "showCacheVideoAd: VideoAdListener 视频广告加载失败，准备缓存 02");
+                mNGAVideoController.showAd();
+            }
+        } else {
+            Log.d(TAG, "showCacheVideoAd: VideoAdListener 视频广告加载失败，不存在缓存视频");
+            if (mAdCallback != null) {
+                AdError adError = new AdError();
+                adError.setCode(String.valueOf(AdError.AD_ERROR));
+//                adError.setCode(String.valueOf(code));
+                adError.setMessage(message);
+                mAdCallback.onNoAd(adError);
+            }
+        }
+    }
 
     //注意：请在Activity成员变量保存，使用匿名内部类可能导致回收
     private NGAWelcomeListener mSplashAdListener = new NGAWelcomeListener() {

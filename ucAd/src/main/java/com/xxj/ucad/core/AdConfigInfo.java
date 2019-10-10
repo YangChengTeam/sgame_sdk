@@ -5,10 +5,10 @@ public class AdConfigInfo {
     private String adId;
     private Object ext;
 
-    private String videoPosId;
-    private String bannerPosId;
-    private String insertPosId;
-    private String welcomeId;
+    private String videoPosId;  //视频广告
+    private String bannerPosId; //横幅广告
+    private String insertPosId; //插屏广告
+    private String welcomeId; //开屏广告
 
     public Object getExt() {
         return ext;

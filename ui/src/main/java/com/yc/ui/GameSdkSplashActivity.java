@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.xxj.ucad.core.AdCallback;
+import com.xxj.ucad.core.AdConfigInfo;
 import com.xxj.ucad.core.AdType;
+import com.xxj.ucad.core.Config;
 import com.xxj.ucad.core.InitCallback;
 import com.xxj.ucad.core.SAdSDK;
 import com.xxj.ucad.core.AdError;
@@ -30,28 +32,16 @@ public class GameSdkSplashActivity extends BaseActivity {
     }
 
     private void initAdSdk() {
-        ToastUtil.init(getApplicationContext());
-       /* SGameSDK.getImpl().init(this, null, new InitCallback() {
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "initSGameSDK onSuccess: ");
-//                showSplash();
-                startNext();
-            }
+        Config config = new Config();
+        AdConfigInfo adConfigInfo = new AdConfigInfo();
+        adConfigInfo.setAdId("1000007481");
+        adConfigInfo.setVideoPosId("1562660861908"); //1475893508926018
+        adConfigInfo.setWelcomeId("1498731130656389");
+        adConfigInfo.setBannerPosId("1476429649994173");
+        adConfigInfo.setInsertPosId("1476429649994172");
+        config.setAdConfigInfo(adConfigInfo);
 
-            @Override
-            public void onFailure(com.yc.sgame.core.Error error) {
-                Log.d(TAG, "initSGameSDK onFailure:  error " + error.getCode() + " -- " + error.getMessage());
-                String code = error.getCode();
-                if (String.valueOf(AdError.AD_INIT_ERROR).equals(code)) { //初始化广告失败
-                    ToastUtil.show("初始化失败", "广告初始化失败");
-                } else if (String.valueOf(AdError.LOGIN_INIT_ERROR).equals(code)) { //初始化账户失败
-                    ToastUtil.show("初始化失败", "账户初始化失败");
-                }
-            }
-        });*/
-
-        SAdSDK.getImpl().init(this, null, new InitCallback() {
+        SAdSDK.getImpl().init(this, config, new InitCallback() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "onSuccess: 初始化广告SDK onSuccess");

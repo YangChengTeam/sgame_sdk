@@ -29,6 +29,8 @@ public class AdApplication extends Application {
         ttConfig.setTtAdInsterNormal("901121725");
         ttConfig.setTtAdSplash("801121648");
         ttConfig.setTtAdVideoHorizontal("901121375");
+        ttConfig.setTtAdVideoReward("901121365");
+        ttConfig.setTtAdVideoRewardHorizontal("901121430");
         ttConfig.setTtAdVideoVertical("901121375");
         ttConfig.setTtAdVideoNative("901121709");
         ttConfig.setTtAdbanner("901121987");

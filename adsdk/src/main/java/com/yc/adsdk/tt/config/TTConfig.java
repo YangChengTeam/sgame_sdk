@@ -10,6 +10,8 @@ public class TTConfig {
     private String ttAdInsterNormal;
     private String ttAdSplash;
     private String ttAdVideoVertical;
+    private String ttAdVideoReward;
+    private String ttAdVideoRewardHorizontal;
     private String ttAdVideoHorizontal;
     private String ttAdVideoNative;
     private String ttAdbanner;
@@ -63,6 +65,22 @@ public class TTConfig {
 
     public void setTtAdVideoHorizontal(String ttAdVideoHorizontal) {
         this.ttAdVideoHorizontal = ttAdVideoHorizontal;
+    }
+
+    public String getTtAdVideoRewardHorizontal() {
+        return ttAdVideoRewardHorizontal;
+    }
+
+    public void setTtAdVideoRewardHorizontal(String ttAdVideoRewardHorizontal) {
+        this.ttAdVideoRewardHorizontal = ttAdVideoRewardHorizontal;
+    }
+
+    public void setTtAdVideoReward(String ttAdVideoReward) {
+        this.ttAdVideoReward = ttAdVideoReward;
+    }
+
+    public String getTtAdVideoReward() {
+        return ttAdVideoReward;
     }
 
     public void setTtAdbanner(String ttAdbanner) {

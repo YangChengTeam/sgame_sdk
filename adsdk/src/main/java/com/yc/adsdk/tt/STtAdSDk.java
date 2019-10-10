@@ -30,6 +30,7 @@ import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.TTImage;
 import com.bytedance.sdk.openadsdk.TTInteractionAd;
 import com.bytedance.sdk.openadsdk.TTNativeAd;
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
 import com.yc.adsdk.R;
 import com.yc.adsdk.core.AdCallback;
@@ -51,7 +52,7 @@ import java.util.List;
 
 public class STtAdSDk implements ISGameSDK {
 
-    private static final String TAG = "STtAdSDk";
+    private static final String TAG = "GameSdkLog";
 
     private static STtAdSDk sTtAdSDk;
     private TTAdNative mTTAdNative;
@@ -91,6 +92,7 @@ public class STtAdSDk implements ISGameSDK {
     public void init(Context context, Config config, InitCallback callback) {
         TTAdManagerHolder.init(context, config);
         mConfig = config;
+        ToastUtil.init(context);
     }
 
     @Override
@@ -125,6 +127,12 @@ public class STtAdSDk implements ISGameSDK {
                 activity = (Activity) context;
                 mSplashContainer = activity.getWindow().getDecorView().findViewById(android.R.id.content);
                 loadNativeAd(ttConfig.getTtAdVideoNative());
+                break;
+            case VIDEO_REWARD_V:
+                loadRewardVideoAd(ttConfig.getTtAdVideoReward(), TTAdConstant.VERTICAL);
+                break;
+            case VIDEO_REWARD:
+                loadRewardVideoAd(ttConfig.getTtAdVideoRewardHorizontal(), TTAdConstant.HORIZONTAL);
                 break;
             case VIDEO_V:
                 loadVideoAd(ttConfig.getTtAdVideoHorizontal(), TTAdConstant.VERTICAL);
@@ -612,6 +620,142 @@ public class STtAdSDk implements ISGameSDK {
         return dipValue * scale + 0.5f;
     }
 
+    private TTRewardVideoAd mttRewardVideoAd;
+
+    /**
+     * 加载激励视频广告
+     */
+    private void loadRewardVideoAd(String codeId, int orientation) {
+        AdSlot adSlot = new AdSlot.Builder()
+                .setCodeId(codeId)
+                .setSupportDeepLink(true)
+                .setAdCount(2)
+                .setImageAcceptedSize(1080, 1920)
+                .setRewardName("金币") //奖励的名称
+                .setRewardAmount(3)   //奖励的数量
+                //必传参数，表来标识应用侧唯一用户；若非服务器回调模式或不需sdk透传
+                //可设置为空字符串
+                .setUserID("user123")
+                .setOrientation(orientation)  //设置期望视频播放的方向，为TTAdConstant.HORIZONTAL或TTAdConstant.VERTICAL
+                .setMediaExtra("media_extra") //用户透传的信息，可不传
+                .build();
+        mTTAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
+            @Override
+            public void onError(int code, String message) {
+                Log.d(TAG, "onError: loadRewardVideoAd onError code " + code + "  message " + message);
+//                showToast("激励视频广告 loadRewardVideoAd onError code " + code + "  message " + message);
+                Error error = new Error();
+                error.setTripartiteCode(code);
+                error.setMessage(message);
+                mAdCallback.onNoAd(error);
+            }
+
+            //视频广告加载后的视频文件资源缓存到本地的回调
+            @Override
+            public void onRewardVideoCached() {
+                Log.d(TAG, "onRewardVideoCached: loadRewardVideoAd 视频广告加载后的视频文件资源缓存到本地的回调");
+//                showToast("激励视频广告  " + "rewardVideoAd video cached");
+            }
+
+            //视频广告素材加载到，如title,视频url等，不包括视频文件
+            @Override
+            public void onRewardVideoAdLoad(TTRewardVideoAd ad) {
+                Log.d(TAG, "onRewardVideoAdLoad: 激励视频广告 rewardVideoAd loaded 加载完成");
+//                showToast("激励视频广告  " + "rewardVideoAd loaded");
+                mttRewardVideoAd = ad;
+                //mttRewardVideoAd.setShowDownLoadBar(false);
+                mttRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
+
+                    @Override
+                    public void onAdShow() {
+                        Log.d(TAG, "onAdShow: loadRewardVideoAd");
+                        mAdCallback.onPresent();
+                    }
+
+                    @Override
+                    public void onAdVideoBarClick() { ////广告的下载bar点击回调
+                        Log.d(TAG, "onAdVideoBarClick: loadRewardVideoAd 广告的下载bar点击回调");
+                        mAdCallback.onClick();
+                    }
+
+                    @Override
+                    public void onAdClose() { //视频广告关闭回调
+                        Log.d(TAG, "onAdClose: loadRewardVideoAd 视频广告关闭回调");
+//                        showToast("激励视频广告  " + "rewardVideoAd close");
+                        mAdCallback.onDismissed();
+                    }
+
+                    @Override
+                    public void onVideoComplete() {   //视频广告播放完毕回调
+                        Log.d(TAG, "onVideoComplete: loadRewardVideoAd 视频广告播放完毕回调");
+//                        mAdCallback.onDismissed();
+                    }
+
+                    /**
+                     * 视频广告播完验证奖励有效性回调，参数分别为是否有效，奖励数量，奖励名称
+                     */
+                    @Override
+                    public void onRewardVerify(boolean rewardVerify, int rewardAmount, String rewardName) {
+                        Log.d(TAG, "onRewardVerify: loadRewardVideoAd  视频广告播完验证奖励有效性回调，参数分别为是否有效，奖励数量，奖励名称  " +
+                                "verify:" + rewardVerify + " amount:" + rewardAmount + " name:" + rewardName);
+//                        showToast("激励视频广告  " + "verify:" + rewardVerify + " amount:" + rewardAmount +" name:" + rewardName);
+                    }
+
+                    @Override
+                    public void onVideoError() {
+                        Log.d(TAG, "onVideoError: loadRewardVideoAd");
+//                        showToast("激励视频广告 onVideoError onError ");
+                        Error error = new Error();
+                        error.setMessage("RewardAdInteractionListener_onVideoError");
+                        mAdCallback.onNoAd(error);
+                    }
+
+                    @Override
+                    public void onSkippedVideo() {  //跳过
+                        Log.d(TAG, "onSkippedVideo: loadRewardVideoAd 跳过 ");
+//                        showToast("激励视频广告 onSkippedVideo ");
+                        mAdCallback.onDismissed();
+                    }
+                });
+                mttRewardVideoAd.setDownloadListener(new TTAppDownloadListener() {
+                    @Override
+                    public void onIdle() {
+
+                    }
+
+                    @Override
+                    public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
+
+                    }
+
+                    @Override
+                    public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
+
+                    }
+
+                    @Override
+                    public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
+
+                    }
+
+                    @Override
+                    public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+
+                    }
+
+                    @Override
+                    public void onInstalled(String fileName, String appName) {
+
+                    }
+                });
+                if (mttRewardVideoAd != null) {
+                    //step6:在获取到广告后展示
+                    mttRewardVideoAd.showRewardVideoAd((Activity) mShowAdContext);
+                    mttRewardVideoAd = null;
+                }
+            }
+        });
+    }
 
     private TTFullScreenVideoAd mttFullVideoAd;
 

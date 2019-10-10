@@ -14,7 +14,7 @@ public class AdUiMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad_ui_main);
 
-        ToastUtil.init(getApplicationContext());
+//        ToastUtil.init(getApplicationContext());
 
 
         startActivity(new Intent(AdUiMainActivity.this, TTSdkShowSplashActivity.class));

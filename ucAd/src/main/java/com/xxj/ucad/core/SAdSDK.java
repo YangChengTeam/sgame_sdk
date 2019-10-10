@@ -3,14 +3,9 @@ package com.xxj.ucad.core;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.xxj.ucad.ad.SUcAdSdk;
 import com.xxj.ucad.utils.ToastUtil;
@@ -23,6 +18,8 @@ public class SAdSDK implements ISGameSDK {
     private String TAG = "GameSdkLog";
 
     private static SAdSDK sAdSDK;
+    private AdType adType;
+    private AdCallback adCallback;
 
     public static SAdSDK getImpl() {
         if (sAdSDK == null) {
@@ -37,60 +34,34 @@ public class SAdSDK implements ISGameSDK {
 
     @Override
     public void init(Context context, Config config, InitCallback callback) {
-        if (Build.VERSION.SDK_INT >= 23) {
-//            checkAndPermission(context);
-        }
-        String ucAdAppId = null, ucAdVideoPosId = null, ucAdBannerPosId = null, ucAdWelcomePosId = null, ucAdInsertPosId = null;
-        PackageManager pm = context.getPackageManager();
-        try {
-            ApplicationInfo appinfo = pm.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-            Bundle bundle = appinfo.metaData;
-            if (null != bundle) {
-                Resources resources = context.getResources();
-                ucAdAppId = resources.getString(bundle.getInt("UC_AD_APPID"));
-                ucAdVideoPosId = resources.getString(bundle.getInt("UC_AD_VIDEO_POSID"));
-                ucAdBannerPosId = resources.getString(bundle.getInt("UC_AD_BANNER_POSID"));
-                ucAdWelcomePosId = resources.getString(bundle.getInt("UC_AD_WELCOME_POSID"));
-                ucAdInsertPosId = resources.getString(bundle.getInt("UC_AD_INSERT_POSID"));
-            }
-            Log.d(TAG, "ucSdkInit:  ucAdAppId " + ucAdAppId + " ucAdVideoPosId " + ucAdVideoPosId +
-                    " ucAdBannerPosId " + ucAdBannerPosId + " ucAdWelcomePosId " + ucAdWelcomePosId + " ucAdInsertPosId " + ucAdInsertPosId);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "AndroidManifest.xml meta->配置问题");
-            return;
-        }
-        if (TextUtils.isEmpty(ucAdAppId)) {
-            ToastUtil.show(TAG, "初始化失败，请在String.xml文件配置广告appId 02   code:00046");
-            return;
-        }
-        if (TextUtils.isEmpty(ucAdVideoPosId) || TextUtils.isEmpty(ucAdBannerPosId) || TextUtils.isEmpty(ucAdWelcomePosId) || TextUtils.isEmpty(ucAdInsertPosId)) {
-            ToastUtil.show(TAG, "初始化失败，请在String.xml文件文件配置广告PosId 4   code:00045");
-            return;
-        }
-
-        Config config1 = new Config();
-        AdConfigInfo adConfigInfo = new AdConfigInfo();
-        adConfigInfo.setAdId(ucAdAppId);
-        adConfigInfo.setVideoPosId(ucAdVideoPosId);
-        adConfigInfo.setBannerPosId(ucAdBannerPosId);
-        adConfigInfo.setBannerPosId(ucAdBannerPosId);
-        adConfigInfo.setWelcomeId(ucAdWelcomePosId);
-        adConfigInfo.setInsertPosId(ucAdInsertPosId);
-        config1.setAdConfigInfo(adConfigInfo);
-        SUcAdSdk.getImpl().init(context, config1, callback);
+        ToastUtil.init(context);
+        SUcAdSdk.getImpl().init(context, config, callback);
     }
 
 
     @Override
     public void showAd(Context context, AdType type, AdCallback callback) {
-        SUcAdSdk.getImpl().showAd(context, type, callback);
+        if (Build.VERSION.SDK_INT >= 23) {
+            this.adType = type;
+            this.adCallback = callback;
+            checkAndPermission(context);
+        } else {
+            SUcAdSdk.getImpl().showAd(context, type, callback);
+        }
     }
+
+    @Override
+    public void hindAd( AdTypeHind type) {
+        SUcAdSdk.getImpl().hindAd(type);
+    }
+
+
 
     private void checkAndPermission(Context context) {
         List<String> lackedPermission = new ArrayList<String>();
         List<String> necessaryPermissions = getNecessaryPermissions();
-        for (String necessaryPermission : necessaryPermissions) {
-            if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            for (String necessaryPermission : necessaryPermissions) {
                 if (!(context.checkSelfPermission(necessaryPermission) == PackageManager.PERMISSION_GRANTED)) {
                     lackedPermission.add(necessaryPermission);
                 }
@@ -108,6 +79,10 @@ public class SAdSDK implements ISGameSDK {
                 }
             });
             alertDialog.show();
+        } else {
+            if (adType != null && adCallback != null) {
+                SUcAdSdk.getImpl().showAd(context, adType, adCallback);
+            }
         }
     }
 

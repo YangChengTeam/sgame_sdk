@@ -9,4 +9,6 @@ public interface ISGameSDK {
 
     void showAd(Context context, AdType type, AdCallback callback);
 
+    void hindAd(AdTypeHind type);
+
 }

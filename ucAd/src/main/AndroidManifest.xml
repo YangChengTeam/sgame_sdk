@@ -48,9 +48,10 @@
                 android:resource="@xml/adp_file_path" />
         </provider>
 
+        <!--            android:configChanges="keyboardHidden|orientation|screenSize"-->
         <activity
             android:name="cn.sirius.nga.activity.ProxyActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustResize"
             tools:replace="android:configChanges" />
